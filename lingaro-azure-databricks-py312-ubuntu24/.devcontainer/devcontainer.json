@@ -1,0 +1,47 @@
+{
+  "name": "lingaro-azure-databricks-py312-ubuntu24",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "lingaro-azure-databricks-py312-ubuntu24",
+  "shutdownAction": "none",
+  "features": {},
+  "workspaceFolder": "/workspaces/lingaro-azure-databricks-py312-ubuntu24",
+  "postCreateCommand": "${containerWorkspaceFolder}/scripts/post-create.sh",
+  "updateContentCommand": "",
+  "postStartCommand": "${containerWorkspaceFolder}/scripts/post-start.sh",
+  "postAttachCommand": "${containerWorkspaceFolder}/scripts/post-attach.sh",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "python.defaultInterpreterPath": "/usr/bin/python3.12",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.formatting.provider": "black",
+        "python.formatting.blackArgs": ["--line-length", "88"],
+        "databricks.python.interpreterPath": "/usr/bin/python3.12"
+      },
+      "extensions": [
+        "databricks.databricks",
+        "databricks.databricks-power-tools",
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "ms-python.pylint",
+        "ms-azuretools.vscode-azurecli",
+        "ms-vscode.azure-account",
+        "saoudrizwan.claude-dev"
+      ]
+    }
+  },
+  "forwardPorts": [8004],
+  "portsAttributes": {
+    "8004": {
+      "label": "lingaro-azure-databricks-py312-ubuntu24",
+      "onAutoForward": "notify"
+    }
+  }
+}
