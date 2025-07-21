@@ -1,6 +1,6 @@
 services:
   lingaro-azure-py312-ubuntu24:
-    image: ${AZURE_ACR_REGISTRY_NAME}/lingaro-azure-py312-ubuntu24:1
+    image: ${AZURE_ACR_REGISTRY_NAME}/lingaro-azure-py312-ubuntu24:${IMAGE_TAG:-$(../get-latest-tag.sh lingaro-azure-py312-ubuntu24)}
     volumes:
       - ../:/workspaces:cached
     ports:

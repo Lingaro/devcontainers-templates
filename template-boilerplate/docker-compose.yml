@@ -1,6 +1,6 @@
 services:
   template-boilerplate:
-    image: ${AZURE_ACR_REGISTRY_NAME}/template-boilerplate:latest
+    image: ${AZURE_ACR_REGISTRY_NAME}/template-boilerplate:${IMAGE_TAG:-$(../get-latest-tag.sh template-boilerplate)}
     volumes:
       - ../:/workspaces:cached
     ports:
