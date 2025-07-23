@@ -4,9 +4,9 @@
   "service": "template-boilerplate",
   "workspaceFolder": "/workspaces",
   "shutdownAction": "stopCompose",
-  "postCreateCommand": "./scripts/post-create.sh",
-  "postAttachCommand": "./scripts/post-attach.sh",
-  "postStartCommand": "./scripts/post-start.sh",
+  "postCreateCommand": "${containerWorkspaceFolder}/template-boilerplate/scripts/post-create.sh",
+  "postAttachCommand": "${containerWorkspaceFolder}/template-boilerplate/scripts/post-attach.sh",
+  "postStartCommand": "${containerWorkspaceFolder}/template-boilerplate/scripts/post-start.sh",
   "customizations": {
     "vscode": {
       "extensions": [

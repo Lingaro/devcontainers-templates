@@ -1,6 +1,6 @@
 services:
   lingaro-azure-databricks-py312-ubuntu24:
-    image: ${AZURE_ACR_REGISTRY_NAME}/lingaro-azure-databricks-py312-ubuntu24:${IMAGE_TAG:-$(../get-latest-tag.sh lingaro-azure-databricks-py312-ubuntu24)}
+    image: ${AZURE_ACR_REGISTRY_NAME}/lingaro-azure-databricks-py312-ubuntu24:latest
     volumes:
       - ../:/workspaces:cached
     ports:
