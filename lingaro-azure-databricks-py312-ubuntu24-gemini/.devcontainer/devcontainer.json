@@ -1,0 +1,32 @@
+{
+  "name": "Lingaro Azure Databricks Py312 Ubuntu24 Gemini",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "lingaro-azure-databricks-py312-ubuntu24-gemini",
+  "workspaceFolder": "/workspaces/lingaro-azure-databricks-py312-ubuntu24-gemini",
+  "shutdownAction": "stopCompose",
+  "postCreateCommand": "${containerWorkspaceFolder}/scripts/post-create.sh",
+  "postAttachCommand": "${containerWorkspaceFolder}/scripts/post-attach.sh",
+  "postStartCommand": "${containerWorkspaceFolder}/scripts/post-start.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.pylint",
+        "ms-python.black-formatter"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.formatting.provider": "black",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true
+      }
+    }
+  },
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": {
+      "label": "Application",
+      "onAutoForward": "notify"
+    }
+  }
+}

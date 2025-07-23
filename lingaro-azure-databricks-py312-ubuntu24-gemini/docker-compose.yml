@@ -1,0 +1,15 @@
+services:
+  lingaro-azure-databricks-py312-ubuntu24-gemini:
+    image: ${AZURE_ACR_REGISTRY_NAME}/lingaro-azure-databricks-py312-ubuntu24-gemini:latest
+    volumes:
+      - ../:/workspaces:cached
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env
+    environment:
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+      - ENV_VAR_EXAMPLE=${ENV_VAR_EXAMPLE}
+    command: /bin/bash -c "while sleep 1000; do :; done"
