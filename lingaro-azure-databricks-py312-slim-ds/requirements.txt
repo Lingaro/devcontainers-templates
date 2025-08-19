@@ -1,0 +1,46 @@
+# Core Data Science Stack
+pandas>=2.0.0
+numpy>=1.24.0
+scikit-learn>=1.3.0
+
+# Machine Learning & Deep Learning
+torch>=2.0.0
+transformers>=4.35.0
+accelerate>=0.25.0
+peft>=0.5.0
+
+# Experiment Tracking
+mlflow>=2.8.0
+
+# Jupyter Environment
+jupyterlab>=4.0.0
+ipywidgets>=8.0.0
+
+# Development Tools
+black>=23.0.0
+isort>=5.12.0
+pylint>=2.17.0
+
+# Fast Model Fine-tuning
+# Note: Unsloth has dependency conflicts with Python 3.12 on ARM64
+# Install manually after container creation if needed:
+# pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
+# unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git ; platform_machine == "x86_64" and python_version < "3.12"
+
+# Git LFS Support
+gitpython>=3.1.0
+
+# Azure ML Integration
+azure-ai-ml>=1.12.0
+azureml-core>=1.50.0
+
+# Databricks Integration
+databricks-cli>=0.18.0
+databricks-sdk>=0.18.0
+
+# Hugging Face Hub
+huggingface-hub>=0.17.0
+
+# Additional Azure packages for better integration
+azure-core>=1.30.0
+azure-identity>=1.15.0
