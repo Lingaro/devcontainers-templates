@@ -1,10 +1,8 @@
 {
   "name": "lingaro-azure-py312-ubuntu24",
-  "dockerComposeFile": [
-    "../docker-compose.yml"
-  ],
+  "dockerComposeFile": "../docker-compose.yml",
   "service": "lingaro-azure-py312-ubuntu24",
-  "shutdownAction": "none",
+  "shutdownAction": "stopCompose",
   "features": {},
   "workspaceFolder": "/workspaces/lingaro-azure-py312-ubuntu24",
   "postCreateCommand": "${containerWorkspaceFolder}/scripts/post-create.sh",

@@ -59,6 +59,21 @@ check "MLflow" "[ -n '$MLFLOW_TRACKING_URI' ]" \
     "MLflow URI: $MLFLOW_TRACKING_URI" \
     "MLflow: Using default URI"
 
+# Anthropic / Cline
+mask() { [ -n "$1" ] && echo "${1:0:4}****${1: -4}" || echo "(empty)"; }
+echo "🧠 Cline/Anthropic config:"
+echo "  Base URL: ${ANTHROPIC_BASE_URL:-(unset)}"
+echo "  Model: ${ANTHROPIC_DEFAULT_SONNET_MODEL:-(unset)}"
+echo "  API Key: $(mask "$ANTHROPIC_API_KEY")"
+if [ -f "$HOME/.claude/settings.json" ]; then
+    echo "  Claude settings: present at ~/.claude/settings.json"
+else
+    echo "  Claude settings: not found"
+fi
+
+# GitHub token presence (masked)
+echo "🐙 GitHub token: $(mask "$GH_TOKEN")"
+
 # Service status check
 echo "🔍 Service status..."
 check "Jupyter Lab" "pgrep -f 'jupyter-lab'" \

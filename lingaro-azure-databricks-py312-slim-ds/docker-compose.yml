@@ -1,5 +1,5 @@
+version: "3.9"
 services:
-
   lingaro-azure-databricks-py312-slim-ds:
     build:
       context: .
@@ -30,6 +30,15 @@ services:
       - DATABRICKS_TOKEN=${DATABRICKS_TOKEN:-}
       - DATABRICKS_AZURE_RESOURCE_ID=${DATABRICKS_AZURE_RESOURCE_ID:-}
       - HUGGINGFACE_HUB_TOKEN=${HUGGINGFACE_HUB_TOKEN:-}
+      # Anthropic / Cline
+      - ANTHROPIC_BASE_URL=${ANTHROPIC_BASE_URL:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ANTHROPIC_AUTH_TOKEN=${ANTHROPIC_AUTH_TOKEN:-${ANTHROPIC_API_KEY}}
+      - ANTHROPIC_DEFAULT_SONNET_MODEL=${ANTHROPIC_DEFAULT_SONNET_MODEL:-vertex_ai/claude-sonnet-4}
+      - DISABLE_NON_ESSENTIAL_MODEL_CALLS=${DISABLE_NON_ESSENTIAL_MODEL_CALLS:-1}
+      - CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=${CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC:-1}
+      # GitHub CLI / tooling
+      - GH_TOKEN=${GH_TOKEN:-}
     working_dir: /workspaces/lingaro-azure-databricks-py312-slim-ds
     command: /bin/bash -c "/workspaces/lingaro-azure-databricks-py312-slim-ds/scripts/post-start.sh && tail -f /dev/null"
     tty: true

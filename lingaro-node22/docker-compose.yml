@@ -1,0 +1,8 @@
+services:
+  lingaro-node22:
+    image: ${AZURE_ACR_REGISTRY_NAME}/lingaro-node22:latest
+    volumes:
+      - ../:/workspaces:cached
+    ports:
+      - 3000:3000
+    command: /bin/bash -c "while sleep 1000; do :; done"

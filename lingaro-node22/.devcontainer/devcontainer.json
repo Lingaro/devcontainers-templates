@@ -1,0 +1,34 @@
+{
+  "name": "lingaro-node22",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "lingaro-node22",
+  "shutdownAction": "none",
+  "features": {},
+  "workspaceFolder": "/workspaces/lingaro-node22",
+  "postCreateCommand": "${containerWorkspaceFolder}/scripts/post-create.sh",
+  "updateContentCommand": "",
+  "postStartCommand": "${containerWorkspaceFolder}/scripts/post-start.sh",
+  "postAttachCommand": "${containerWorkspaceFolder}/scripts/post-attach.sh",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  },
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Node App",
+      "onAutoForward": "notify"
+    }
+  }
+}

@@ -69,4 +69,26 @@ mkdir -p /workspaces/lingaro-azure-databricks-py312-slim-ds/mlruns
 echo "📁 Creating workspace structure..."
 mkdir -p /workspaces/lingaro-azure-databricks-py312-slim-ds/{data,models,notebooks,experiments}
 
+# Configure Claude Code / Cline settings for Anthropic via LiteLLM-compatible proxy
+echo "🧠 Configuring Claude settings..."
+CLAUDE_DIR="${HOME}/.claude"
+mkdir -p "$CLAUDE_DIR"
+cat > "$CLAUDE_DIR/settings.json" <<JSON
+{
+    "model": "${ANTHROPIC_DEFAULT_SONNET_MODEL:-vertex_ai/claude-sonnet-4}",
+    "env": {
+        "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}",
+        "ANTHROPIC_BASE_URL": "${ANTHROPIC_BASE_URL}",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "${ANTHROPIC_DEFAULT_SONNET_MODEL:-vertex_ai/claude-sonnet-4}",
+        "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "${DISABLE_NON_ESSENTIAL_MODEL_CALLS:-1}",
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "${CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC:-1}"
+    }
+}
+JSON
+
+echo "✅ Claude settings written to $CLAUDE_DIR/settings.json"
+
+# Make test helper executable
+chmod +x /workspaces/lingaro-azure-databricks-py312-slim-ds/scripts/test_cline_env.sh || true
+
 echo "✅ Post-create completed!"
