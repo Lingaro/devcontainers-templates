@@ -22,7 +22,7 @@ az account set --subscription "$SUBSCRIPTION_ID" || az login && az account set -
 az acr login --name "$REGISTRY_NAME"
 
 # optional: verify the repo exists
-az acr repository list --name "$REGISTRY_NAME" --output table | grep -i lingaro-node22 || true
+az acr repository list --name "$REGISTRY_NAME" --output table | grep -i lingaro-node22 || echo "Warning: lingaro-node22 image not found in registry!"
 
 # pull and start the service
 docker pull "$REGISTRY_HOST/lingaro-node22:latest"
