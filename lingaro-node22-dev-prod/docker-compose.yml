@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    volumes:
+      - .:/workspaces/project:cached
+    ports:
+      - "3000:3000"
+    tty: true
+    command: bash
+    init: true
+
+  prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    ports:
+      - "3001:3000"
+    command: node build/index.js

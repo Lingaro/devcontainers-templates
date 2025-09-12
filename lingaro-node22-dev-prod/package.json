@@ -1,0 +1,13 @@
+{
+  "name": "lingaro-node22-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node build/index.js",
+    "dev": "node src/index.js",
+    "build": "mkdir -p build && cp src/index.js build/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
