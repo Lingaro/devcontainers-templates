@@ -1,0 +1,46 @@
+services:
+
+  lingaro-azure-databricks-py312-slim-ds:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lingaro-azure-databricks-py312-slim-ds
+    volumes:
+      - .:/workspaces/lingaro-azure-databricks-py312-slim-ds:cached
+      - ~/.gitconfig:/root/.gitconfig:ro
+      - ~/.ssh:/root/.ssh:ro
+      - uv-cache:/root/.cache/uv  # UV package cache
+      - pip-cache:/root/.cache/pip  # Pip cache
+    ports:
+      - "${JUPYTER_PORT:-8888}:${JUPYTER_PORT:-8888}"  # Jupyter Lab
+      - "${MLFLOW_PORT:-5000}:${MLFLOW_PORT:-5000}"  # MLflow UI
+      - "${APP_PORT:-8000}:${APP_PORT:-8000}"  # Application
+    environment:
+      - COMPOSE_BAKE=true  # Enable Docker Buildx Bake for better performance
+      - JUPYTER_TOKEN=${JUPYTER_TOKEN:-}
+      - JUPYTER_PORT=${JUPYTER_PORT:-8888}
+      - MLFLOW_TRACKING_URI=http://localhost:${MLFLOW_PORT:-5000}
+      - MLFLOW_PORT=${MLFLOW_PORT:-5000}
+      - APP_PORT=${APP_PORT:-8000}
+      - PYTHONPATH=/workspaces/lingaro-azure-databricks-py312-slim-ds
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID:-}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID:-}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET:-}
+      - DATABRICKS_HOST=${DATABRICKS_HOST:-}
+      - DATABRICKS_TOKEN=${DATABRICKS_TOKEN:-}
+      - DATABRICKS_AZURE_RESOURCE_ID=${DATABRICKS_AZURE_RESOURCE_ID:-}
+      - HUGGINGFACE_HUB_TOKEN=${HUGGINGFACE_HUB_TOKEN:-}
+    working_dir: /workspaces/lingaro-azure-databricks-py312-slim-ds
+    command: /bin/bash -c "/workspaces/lingaro-azure-databricks-py312-slim-ds/scripts/post-start.sh && tail -f /dev/null"
+    tty: true
+    stdin_open: true
+    deploy:
+      resources:
+        limits:
+          memory: 12G
+        reservations:
+          memory: 8G
+
+volumes:
+  uv-cache:
+  pip-cache:
