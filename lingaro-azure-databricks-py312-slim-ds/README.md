@@ -10,18 +10,24 @@ A high-performance, optimized DevContainer template for data scientists with Azu
    cd lingaro-azure-databricks-py312-slim-ds
    ```
 
-2. **Build with Caching**: 
+2. **Configure Environment**: 
+   ```bash
+   cp .env.example .env
+   # update credentials and tokens in .env
+   ```
+
+3. **Build with Caching**: 
    ```bash
    docker compose build
    docker compose up -d
    ```
 
-3. **Connect to Container**: 
+4. **Connect to Container**: 
    ```bash
-   docker exec -it lingaro-datascience-simple zsh
+   docker exec -it lingaro-azure-databricks-py312-slim-ds zsh
    ```
 
-4. **Ready to Go**: 
+5. **Ready to Go**: 
    - Jupyter Lab: http://localhost:8888
    - MLflow UI: http://localhost:5000
 
@@ -40,9 +46,9 @@ A high-performance, optimized DevContainer template for data scientists with Azu
 
 ## 📦 What's Included
 
-### VS Code Extensions (Auto-installed)
+### VS Code Extensions (Recommended)
 - **Databricks** - `databricks.databricks`
-- **Azure ML** - `ms-azuretools.vscode-azureml` 
+- **Azure ML** - `ms-azuretools.vscode-azureml`
 - **Jupyter** - `ms-toolsai.jupyter`
 - **Python** - `ms-python.python`
 - **Git** - `eamodio.gitlens`
@@ -162,14 +168,11 @@ with mlflow.start_run():
 
 ```
 lingaro-azure-databricks-py312-slim-ds/
-├── .devcontainer/
-│   └── devcontainer.json          # VS Code DevContainer config
 ├── scripts/
 │   ├── post-attach.sh             # Configuration checks on attach
 │   ├── post-create.sh             # One-time setup after creation
 │   ├── post-start.sh              # Service startup script
-│   ├── setup-zsh.sh               # Modular Zsh configuration
-│   └── setup.sh                   # Main setup script
+│   └── setup-zsh.sh               # Oh My Zsh configuration
 ├── .env.example                   # Environment variables template
 ├── docker-compose.yml             # Docker Compose with caching
 ├── Dockerfile                     # Optimized container definition

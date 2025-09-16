@@ -1,47 +1,59 @@
-# Databricks Dev Container Pipeline
+# Lingaro Azure Databricks (ACR) DevContainer
+
+Development container that pulls the `lingaro-azure-databricks-py312-ubuntu24:latest` image from your Azure Container Registry and exposes a ready-to-use Python 3.12 + Databricks setup.
 
 ## Quick Start
 
-1. Copy `.env.example` to `.env` and fill in your Azure and Databricks credentials.
-2. Run the build and deploy script:
+1. **Copy environment template**
    ```bash
-   ./scripts/build-and-deploy.sh
+   cd lingaro-azure-databricks-py312-ubuntu24
+   cp .env.example .env
    ```
+2. **Fill in secrets** – update `.env` with your Azure service principal, registry name (`AZURE_ACR_REGISTRY_NAME`), and optional Databricks host/token.
+3. **Open in Dev Container** – in VS Code run "Dev Containers: Open Folder in Container" (or `docker compose up -d`).
+4. **Authenticate** – inside the container run `az login` and, if needed, `databricks configure --token`.
+5. **Confirm services** – forwarded port `8004` is free for your application. Python 3.12 and Azure CLI are pre-installed in the base image.
 
-## Environment Variables
+## Container Details
 
-### Azure Configuration
-- `AZURE_TENANT_ID`: Azure tenant ID
-- `AZURE_CLIENT_ID`: Service principal client ID
-- `AZURE_CLIENT_SECRET`: Service principal client secret
+- Uses `docker-compose.yml` to start the `lingaro-azure-databricks-py312-ubuntu24` service.
+- Pulls `${AZURE_ACR_REGISTRY_NAME}/lingaro-azure-databricks-py312-ubuntu24:latest` and keeps the container running via a sleep loop.
+- Mounts the repository at `/workspaces/lingaro-azure-databricks-py312-ubuntu24` and loads variables from `.env`.
+- Lightweight `post-*` scripts echo status messages; extend them with project-specific setup if required.
 
-### Databricks Configuration
-- `DATABRICKS_HOST`: Your Databricks workspace URL (e.g., https://adb-123.16.azuredatabricks.net)
-- `DATABRICKS_TOKEN`: Your Databricks personal access token
-
-
-## Verify Databricks Connection
-
-Once your devcontainer is running, you can verify your Databricks connection:
+## Verify Databricks Connectivity
 
 ```bash
-# Check environment variables are loaded
-echo $DATABRICKS_HOST
-echo $DATABRICKS_TOKEN
+# Check environment variables
+printenv DATABRICKS_HOST
+printenv DATABRICKS_TOKEN
 
-# Test connection with Databricks CLI
+# CLI checks
 databricks clusters list
+
 databricks current-user me
 
-# Test with Python SDK
-python3 -c "
+# Python SDK check
+python3 - <<'PY'
 from databricks.sdk import WorkspaceClient
 w = WorkspaceClient()
 user = w.current_user.me()
-print(f'Connected as: {user.user_name}')
-"
+print(f"Connected as: {user.user_name}")
+PY
 ```
 
-## Notes
+## File Layout
 
-- The pipeline is designed to be simple: provide credentials, run the script, and you're done.
+```
+lingaro-azure-databricks-py312-ubuntu24/
+├── .devcontainer/devcontainer.json
+├── docker-compose.yml
+├── scripts/
+│   ├── post-attach.sh
+│   ├── post-create.sh
+│   └── post-start.sh
+├── .env.example
+└── README.md
+```
+
+Extend the scripts or VS Code configuration when you need extra tooling or automation.
