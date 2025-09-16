@@ -1,99 +1,50 @@
-# Template Boilerplate
+# Lingaro Azure Databricks Gemini DevContainer
 
-A basic development container template that serves as a starting point for new projects.
+DevContainer variant that pulls the `lingaro-azure-databricks-py312-ubuntu24-gemini:latest` image from your Azure Container Registry and adds support for Gemini tooling alongside Azure and Databricks integrations.
 
 ## Quick Start
 
-1. Copy this template directory and rename it to your project name
-2. Update the configuration files with your specific requirements
-3. Copy `.env.example` to `.env` and configure your environment variables
-4. Open the directory in VS Code and use "Dev Containers: Open Folder in Container"
-
-## What's Included
-
-- **Pre-built container image** from Azure Container Registry
-- **Python 3.12** runtime environment
-- **Ubuntu 24.04** base image
-- **Azure CLI** pre-installed
-- **VS Code** integration with recommended extensions
-- **Git** version control
-- **Basic development tools** (curl, wget, vim, build-essential)
-
-## Customization
-
-### 1. Update Container Configuration
-
-Edit `.devcontainer/devcontainer.json`:
-- Change the `name` field to your project name
-- Update the `service` name to match your project
-- Add/remove VS Code extensions as needed
-- Configure VS Code settings
-
-### 2. Modify Docker Configuration
-
-Edit `docker-compose.yml`:
-- Update service name
-- Change image name and tag (should reference your ACR image)
-- Add additional services (databases, caches, etc.)
-- Configure port mappings
-- Add environment variables
-
-### 4. Customize Setup Scripts
-
-Edit scripts in `scripts/` directory:
-- `post-create.sh`: Runs after container creation
-- `post-attach.sh`: Runs when attaching to container
-- `post-start.sh`: Runs when starting container
-
-### 5. Environment Variables
-
-Copy `.env.example` to `.env` and configure:
-- Azure service principal credentials
-- Azure Container Registry settings
-- Application-specific variables
-- Database connections
-- API keys and secrets
-
-## Development Workflow
-
-1. **Container Setup**: Environment variables and dependencies are automatically configured
-2. **Azure Authentication**: Automatic authentication with Azure Container Registry
-3. **VS Code Integration**: Full IDE experience with debugging, IntelliSense, and extensions
-4. **Port Forwarding**: Port 8000 is forwarded for web applications
-5. **Volume Mounting**: Your workspace is mounted for persistent file changes
-
-## File Structure
-
-```
-template-boilerplate/
-├── .devcontainer/
-│   └── devcontainer.json          # VS Code dev container configuration
-├── scripts/
-│   ├── post-create.sh            # Container creation setup
-│   ├── post-attach.sh            # Container attachment setup
-│   └── post-start.sh             # Container startup setup
-├── docker-compose.yml            # Container orchestration
-├── .env.example                  # Environment variables template
-└── README.md                     # This file
-```
-
-## Testing Your Template
-
-1. Build and test the container:
+1. **Prepare environment file**
    ```bash
-   docker-compose up --build -d
-   docker-compose logs
+   cd lingaro-azure-databricks-py312-ubuntu24-gemini
+   cp .env.example .env
    ```
+2. **Configure `.env`** – provide Azure service principal values, registry name (`AZURE_ACR_REGISTRY_NAME`), Databricks host/token (if needed), and secrets such as `GEMINI_API_KEY`.
+3. **Launch the container** – open the folder in VS Code using Dev Containers or run `docker compose up -d`.
+4. **Sign in** – execute `az login` and `databricks configure --token` inside the container to finish authentication.
+5. **Start coding** – port `8000` is forwarded and the recommended Python tooling is available out of the box.
 
-2. Test with VS Code Dev Containers:
-   - Open this directory in VS Code
-   - Use "Dev Containers: Open Folder in Container"
-   - Verify all extensions and tools work correctly
+## Features
 
-## Notes
+- Pulls `${AZURE_ACR_REGISTRY_NAME}/lingaro-azure-databricks-py312-ubuntu24-gemini:latest` via `docker-compose.yml`.
+- VS Code automatically installs: `ms-python.python`, `ms-python.pylint`, and `ms-python.black-formatter`.
+- `.env` gives you placeholders for Azure, Databricks, generic values, and Gemini API keys.
+- Lifecycle hooks under `scripts/` let you extend the setup when the container is created, started, or attached.
 
-- Uses pre-built images from Azure Container Registry
-- Azure authentication is handled automatically during container creation
-- Python dependencies are installed during container creation
-- The container stays running with a sleep loop
-- All development tools are pre-installed and configured in the base image
+## Verification
+
+```bash
+# Python / formatting toolchain
+python3 --version
+black --version
+pylint --version
+
+# Optional: confirm Gemini credentials are exposed
+printenv GEMINI_API_KEY
+```
+
+## File Layout
+
+```
+lingaro-azure-databricks-py312-ubuntu24-gemini/
+├── .devcontainer/devcontainer.json
+├── docker-compose.yml
+├── scripts/
+│   ├── post-attach.sh
+│   ├── post-create.sh
+│   └── post-start.sh
+├── .env.example
+└── README.md
+```
+
+Adapt the image or scripts if you need extra SDKs beyond what the Gemini variant already contains.

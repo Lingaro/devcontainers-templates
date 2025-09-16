@@ -5,19 +5,20 @@ Collection of Lingaro development container templates for consistent development
 ## Quick Start
 
 1. **Set up environment**: Copy `.env.example` to `.env` in your chosen template
-2. **Open in VS Code**: Use "Dev Containers: Open Folder in Container" on the template directory
+2. **Open in VS Code**: Use "Dev Containers: Open Folder in Container" on the template directory (or run `docker compose up -d` for templates that build locally)
 3. **Start developing**: Container automatically builds and configures your environment
 
 ## Available Templates
 
 - **template-boilerplate** - Base template for creating new templates
-- **lingaro-azure-py312-ubuntu24** - Python 3.12 with Azure tools
-- **lingaro-azure-databricks-py312-ubuntu24** - Python 3.12 with Databricks and Azure tools  
-- **lingaro-azure-databricks-py312-ubuntu24-gemini** - Python 3.12 with Databricks, Azure tools and Gemini
+- **lingaro-azure-py312-ubuntu24** - Python 3.12 with Azure tools (image pulled from ACR)
+- **lingaro-azure-databricks-py312-ubuntu24** - Python 3.12 with Databricks and Azure tools (image pulled from ACR)
+- **lingaro-azure-databricks-py312-ubuntu24-gemini** - Python 3.12 with Databricks, Azure tools and Gemini add-ons (image pulled from ACR)
+- **lingaro-azure-databricks-py312-slim-ds** - Local build optimised for data science workloads with Jupyter, MLflow and caching
 
 ## Folder Structure
 
-Each template contains:
+Most templates follow this structure:
 ```
 template-name/
 ├── .devcontainer/
@@ -30,6 +31,8 @@ template-name/
 ├── .env.example             # Environment variables template
 └── README.md                # Template-specific documentation
 ```
+
+> ℹ️ `lingaro-azure-databricks-py312-slim-ds` builds its Docker image locally and includes an additional `Dockerfile` plus setup scripts tailored to that workflow.
 
 ## Deployment
 
@@ -51,4 +54,4 @@ cd your-template-directory
 docker-compose up -d
 ```
 
-All templates use `:latest` image tags for simplicity.
+ACR-based templates track their container images with the `:latest` tag. The slim template builds locally, so rebuild whenever you change the Dockerfile.
