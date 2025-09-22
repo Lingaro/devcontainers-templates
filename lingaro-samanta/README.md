@@ -10,18 +10,24 @@ Devcontainer definition that runs against an ACR-hosted image `${AZURE_ACR_REGIS
 
 ## Pull and run from Azure Container Registry
 
-Prereqs: Docker running, Azure CLI installed and signed in, `.env` contains `AZURE_ACR_REGISTRY_NAME` and `AZURE_SUBSCRIPTION_ID`.
+Prereqs:
+
+- Docker is running
+- Azure CLI installed and signed in
+- `.env` contains all required variables
 
 ```bash
-# from this folder (lingaro-samanta)
+# To sign in azure:
 export REGISTRY_HOST="${AZURE_ACR_REGISTRY_NAME}"
 export REGISTRY_NAME="${REGISTRY_HOST%%.azurecr.io}"
 
 az login
 az acr login --name "$REGISTRY_NAME"
 
-# optional: verify the repo exists
+# optional:
+# To verify the image exists
 az acr repository list --name "$REGISTRY_NAME" --output table | grep -i lingaro-samanta || echo "Warning: lingaro-samanta image not found in registry!"
+az acr repository list --name "$REGISTRY_NAME" --output table | grep -i lingaro-samanta-dbx164lts || echo "Warning: lingaro-samanta-dbx164lts image not found in registry!"
 ```
 
 ## Ports
