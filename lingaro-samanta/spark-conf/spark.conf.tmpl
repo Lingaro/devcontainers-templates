@@ -1,0 +1,19 @@
+spark.executor.cores=8
+spark.executor.memory=47016M
+spark.driver.memory=57746M
+spark.sql.shuffle.partitions=40
+spark.driver.extraJavaOptions=-XX:+UseG1GC
+spark.executor.extraJavaOptions=-XX:+UseG1GC
+spark.hadoop.fs.azure.account.key.sasamantaprod.blob.core.windows.net=${AZ_ACCOUNT_KEY}
+spark.shuffle.io.maxRetries=10
+spark.shuffle.io.retryWait=60s
+spark.db.url=${DB_URL}
+spark.driver.maxResultSize=32G
+spark.memory.offHeap.enabled=false
+spark.task.cpus=2
+spark.sql.parquet.compression.codec=zstd
+
+# TODO spark.executor.disk=200G # NO SUCH OPTION
+# fs.azure.io.retry.initialDelay=1000 # NO SUCH OPTION
+# fs.azure.io.retry.maxDelay=5000 # NO SUCH OPTION
+# fs.azure.io.retry.maxRetries=10 # INSTEAD: spark.hadoop.fs.azure.io.retry.max.retries
