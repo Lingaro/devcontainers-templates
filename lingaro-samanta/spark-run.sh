@@ -20,9 +20,7 @@ exec "$SPARK_HOME/bin/spark-submit" \
   --conf spark.sql.shuffle.partitions=40 \
   --conf spark.driver.extraJavaOptions=-XX:+UseG1GC \
   --conf spark.executor.extraJavaOptions=-XX:+UseG1GC \
-  --conf spark.hadoop.fs.azure.io.retry.maxRetries=10 \
-  --conf spark.hadoop.fs.azure.io.retry.initialDelay=1000 \
-  --conf spark.hadoop.fs.azure.io.retry.maxDelay=5000 \
+  --conf spark.hadoop.fs.azure.io.retry.max.retries=10 \
   --conf spark.shuffle.io.maxRetries=10 \
   --conf spark.shuffle.io.retryWait=60s \
   --conf spark.driver.maxResultSize=32g \
