@@ -8,6 +8,8 @@ Devcontainer definition that runs against an ACR-hosted image `${AZURE_ACR_REGIS
 
 [![Open in Dev Containers (Insiders)](<https://img.shields.io/badge/Open%20in-Dev%20Containers%20(Insiders)-blue?logo=visualstudiocode>)](https://vscode.dev/redirect?url=vscode-insiders://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/this-repo)
 
+-
+
 [![Open in Dev Containers](https://img.shields.io/static/v1?label=Open%20in&message=Dev%20Containers&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=<URL_REPO>)
 
 [![Open in Dev Containers (Insiders)](<https://img.shields.io/static/v1?label=Open%20in&message=Dev%20Containers%20(Insiders)&color=blue&logo=visualstudiocode>)](https://insiders.vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=<URL_REPO>)
