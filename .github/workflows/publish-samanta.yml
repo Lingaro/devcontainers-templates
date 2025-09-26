@@ -3,6 +3,9 @@ name: publish-samanta
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - feature/lingaro-samanta
 
 permissions:
   contents: read
