@@ -35,7 +35,7 @@ jobs:
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build & push (amd64)
+      - name: Build & push (samanta)
         uses: docker/build-push-action@v6
         with:
           context: lingaro-samanta
@@ -50,3 +50,19 @@ jobs:
             org.opencontainers.image.title=lingaro-samanta
           cache-from: type=gha,scope=lingaro-samanta-amd64
           cache-to: type=gha,mode=max,scope=lingaro-samanta-amd64
+
+      - name: Build & push (dbx)
+        uses: docker/build-push-action@v6
+        with:
+          context: lingaro-samanta
+          file: lingaro-samanta/Dockerfile.dbx164lts
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ghcr.io/${{ steps.owner.outputs.GITHUB_REPOSITORY_OWNER_LOWERCASE }}/lingaro-dbx164lts:1
+            ghcr.io/${{ steps.owner.outputs.GITHUB_REPOSITORY_OWNER_LOWERCASE }}/lingaro-dbx164lts:latest
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.title=lingaro-dbx164lts
+          cache-from: type=gha,scope=lingaro-dbx164lts-amd64
+          cache-to: type=gha,mode=max,scope=lingaro-dbx164lts-amd64
