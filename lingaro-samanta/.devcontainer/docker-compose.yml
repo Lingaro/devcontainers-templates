@@ -7,8 +7,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       TZ: Europe/Warsaw
-    ports:
-      []
+    ports: []
       # - "3306:3306"
     healthcheck:
       test: ["CMD", "mariadb-admin", "ping", "-h", "127.0.0.1", "--silent"]
@@ -80,7 +79,7 @@ services:
     #   dockerfile: Dockerfile.samanta
     restart: unless-stopped
     volumes:
-      - ".:/samanta"
+      - "../:/samanta"
       - /tmp/samanta:/tmp/samanta
       - sbt_ivy:/home/user/.ivy2
       - sbt_cache:/home/user/.sbt
