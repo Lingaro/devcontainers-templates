@@ -39,10 +39,10 @@ git cat-file -e "$REMOTE/$BRANCH:$TEMPLATE" || {
   echo "❌ No '$TEMPLATE' on $REMOTE/$BRANCH"; exit 1;
 }
 
-mkdir -p "$DEST"
 if [ "$CLEAN" = "1" ]; then
-  rm -rf "$DEST"/*
+  rm -rf "$DEST"
 fi
+mkdir -p "$DEST"
 
 # import files
 git archive "$REMOTE/$BRANCH:$TEMPLATE" | tar -x -C "$DEST"
