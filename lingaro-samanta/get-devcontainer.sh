@@ -41,6 +41,9 @@ git cat-file -e "$REMOTE/$BRANCH:$TEMPLATE" || {
 # import files
 git archive "$REMOTE/$BRANCH:$TEMPLATE" | tar -x -C "$DEST"
 
+# convert line endings to LF in all .sh files
+find . -type f -name '*.sh' -print0 | xargs -0 sed -i 's/\r$//'
+
 # update .env.example with absolute path
 if grep -q '^HOST_ABSOLUTE_PATH=' .devcontainer/.env.example 2>/dev/null; then
   WINDOWS_HOST_ABSOLUTE_PATH="$( (pwd -W 2>/dev/null) || true )"
