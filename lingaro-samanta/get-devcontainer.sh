@@ -6,10 +6,9 @@ set -euo pipefail
 TEMPLATE=lingaro-samanta
 
 URL=https://github.com/Lingaro-Enterprise-PoC/devcontainers-templates.git
-BRANCH=feature/samanta
+BRANCH=feature/samanta-ghcr
 REMOTE=devcontainers-templates
-DEST=.devcontainer
-CLEAN=0  # set CLEAN=1, to clear DEST before import
+DEST=.
 
 # install VSCode Dev Containers extension if not installed
 if CODE="$(command -v code-insiders 2>/dev/null)"; then
@@ -39,12 +38,21 @@ git cat-file -e "$REMOTE/$BRANCH:$TEMPLATE" || {
   echo "❌ No '$TEMPLATE' on $REMOTE/$BRANCH"; exit 1;
 }
 
-if [ "$CLEAN" = "1" ]; then
-  rm -rf "$DEST"
-fi
-mkdir -p "$DEST"
-
 # import files
 git archive "$REMOTE/$BRANCH:$TEMPLATE" | tar -x -C "$DEST"
 
+# update .env.example with absolute path
+if grep -q '^HOST_ABSOLUTE_PATH=' .devcontainer/.env.example 2>/dev/null; then
+  WINDOWS_HOST_ABSOLUTE_PATH="$( (pwd -W 2>/dev/null) || true )"
+  if [ -n "$WINDOWS_HOST_ABSOLUTE_PATH" ]; then
+    # Windows
+    HOST_ABSOLUTE_PATH="$(printf '%s' "$WINDOWS_HOST_ABSOLUTE_PATH" | sed -E 's#\\#/#g; s#^([A-Za-z]):/#/run/desktop/mnt/host/\L\1/#')"
+  else
+    # mac/Linux
+    HOST_ABSOLUTE_PATH="$(pwd -P)"
+  fi
+  sed -i -E "s|^HOST_ABSOLUTE_PATH=.*|HOST_ABSOLUTE_PATH=${HOST_ABSOLUTE_PATH}|" .devcontainer/.env.example
+fi
+
 echo "✅ Imported: $REMOTE/$BRANCH:$TEMPLATE → $DEST"
+printf "❗ Please:\n\t1. Copy .devcontainer/.env.example to .devcontainer/.env.\n\t2. Set the variables as needed.\n\t3. Reopen the folder in the container (F1 → Dev Containers: Reopen in Container)"
