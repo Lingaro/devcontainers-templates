@@ -10,6 +10,9 @@ BRANCH=feature/samanta-ghcr
 REMOTE=devcontainers-templates
 DEST=.
 
+# initialize git repo if not initialized already (needed for git remote commands)
+git init 2>/dev/null || :
+
 # install VSCode Dev Containers extension if not installed
 if CODE="$(command -v code-insiders 2>/dev/null)"; then
   :
@@ -42,19 +45,25 @@ git cat-file -e "$REMOTE/$BRANCH:$TEMPLATE" || {
 git archive "$REMOTE/$BRANCH:$TEMPLATE" | tar -x -C "$DEST"
 
 # convert line endings to LF in all .sh files
-find . -type f -name '*.sh' -print0 | xargs -0 sed -i 's/\r$//'
+# fallback for macOS sed which requires an argument for -i
+find . -type f -name '*.sh' -print0 | xargs -0 sed -i 's|\r$||' \
+|| find . -type f -name '*.sh' -print0 | xargs -0 sed -i '' 's|\r$||'
 
 # update .env.example with absolute path
 if grep -q '^HOST_ABSOLUTE_PATH=' .devcontainer/.env.example 2>/dev/null; then
   WINDOWS_HOST_ABSOLUTE_PATH="$( (pwd -W 2>/dev/null) || true )"
   if [ -n "$WINDOWS_HOST_ABSOLUTE_PATH" ]; then
     # Windows
-    HOST_ABSOLUTE_PATH="$(printf '%s' "$WINDOWS_HOST_ABSOLUTE_PATH" | sed -E 's#\\#/#g; s#^([A-Za-z]):/#/run/desktop/mnt/host/\L\1/#')"
+    HOST_ABSOLUTE_PATH="$(printf '%s' "$WINDOWS_HOST_ABSOLUTE_PATH" | sed -E 's|\\|/|g; s|^([A-Za-z]):/|/run/desktop/mnt/host/\L\1/|')"
   else
     # mac/Linux
     HOST_ABSOLUTE_PATH="$(pwd -P)"
   fi
-  sed -i -E "s|^HOST_ABSOLUTE_PATH=.*|HOST_ABSOLUTE_PATH=${HOST_ABSOLUTE_PATH}|" .devcontainer/.env.example
+  # escape & for sed replacement
+  HOST_ABSOLUTE_PATH="$(printf '%s' "$HOST_ABSOLUTE_PATH" | sed 's|[&]|\\&|g')"
+  # fallback for macOS sed which requires an argument for -i
+  sed -i -E "s|^HOST_ABSOLUTE_PATH=.*|HOST_ABSOLUTE_PATH=${HOST_ABSOLUTE_PATH}|" .devcontainer/.env.example \
+  || sed -i '' -E "s|^HOST_ABSOLUTE_PATH=.*|HOST_ABSOLUTE_PATH=${HOST_ABSOLUTE_PATH}|" .devcontainer/.env.example
 fi
 
 echo "✅ Imported: $REMOTE/$BRANCH:$TEMPLATE → $DEST"
