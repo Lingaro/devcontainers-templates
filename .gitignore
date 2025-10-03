@@ -44,3 +44,5 @@ env/
 
 # Claude
 CLAUDE.md 
+lingaro-azure-py310-ccep-udp/hadoop-3.4.0/
+lingaro-azure-py310-ccep-udp/src/
