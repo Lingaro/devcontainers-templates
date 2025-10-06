@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - feature/samanta
+      - feature/samanta-ghcr
 
 permissions:
   contents: read
@@ -41,7 +42,7 @@ jobs:
           context: lingaro-samanta
           file: lingaro-samanta/Dockerfile.samanta
           push: true
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           tags: |
             ghcr.io/${{ steps.owner.outputs.GITHUB_REPOSITORY_OWNER_LOWERCASE }}/lingaro-samanta:1
             ghcr.io/${{ steps.owner.outputs.GITHUB_REPOSITORY_OWNER_LOWERCASE }}/lingaro-samanta:latest
@@ -57,7 +58,7 @@ jobs:
           context: lingaro-samanta
           file: lingaro-samanta/Dockerfile.dbx164lts
           push: true
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           tags: |
             ghcr.io/${{ steps.owner.outputs.GITHUB_REPOSITORY_OWNER_LOWERCASE }}/lingaro-dbx164lts:1
             ghcr.io/${{ steps.owner.outputs.GITHUB_REPOSITORY_OWNER_LOWERCASE }}/lingaro-dbx164lts:latest
