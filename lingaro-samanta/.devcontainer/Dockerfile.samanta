@@ -34,15 +34,16 @@ RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee -a /etc
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-ARG SONAR_SCANNER_VERSION=5.0.1.3006
+# ARG SONAR_SCANNER_VERSION=5.0.1.3006
+ARG SONAR_SCANNER_VERSION=7.3.0.5189
 ARG SONAR_SCANNER_HOME=/opt/sonar-scanner
 ARG TARGETARCH
 
 # Get sonar-scanner
 RUN set -eux; \
     case "$TARGETARCH" in \
-      amd64)  SONAR_ARCH="linux";; \
-      arm64)  SONAR_ARCH="macosx";; \
+      amd64)  SONAR_ARCH="linux-x64";; \
+      arm64)  SONAR_ARCH="linux-aarch64";; \
       *) echo "Unsupported TARGETARCH: $TARGETARCH"; exit 1;; \
     esac; \
     SONAR_URL="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-${SONAR_ARCH}.zip"; \
