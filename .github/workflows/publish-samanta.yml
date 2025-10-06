@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - feature/samanta
+      - feature/samanta-ghcr
 
 permissions:
   contents: read
