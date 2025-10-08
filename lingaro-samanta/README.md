@@ -13,9 +13,9 @@ Devcontainer definition that runs against an GHCR-hosted images:
 
 ## Links
 
-[![Open in Dev Containers](https://img.shields.io/badge/Open%20in-Dev%20Containers-blue?logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Lingaro-Enterprise-PoC/devcontainers-templates)
+[![Open in Dev Containers](https://img.shields.io/badge/Open%20in-Dev%20Containers-blue?logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Lingaro/devcontainers-templates)
 
-[![Open in Dev Containers (Insiders)](<https://img.shields.io/badge/Open%20in-Dev%20Containers%20(Insiders)-blue?logo=visualstudiocode>)](https://vscode.dev/redirect?url=vscode-insiders://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/devcontainers-templates)
+[![Open in Dev Containers (Insiders)](<https://img.shields.io/badge/Open%20in-Dev%20Containers%20(Insiders)-blue?logo=visualstudiocode>)](https://vscode.dev/redirect?url=vscode-insiders://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Lingaro/devcontainers-templates)
 
 ## Quick Start
 
