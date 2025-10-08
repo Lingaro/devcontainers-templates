@@ -70,7 +70,7 @@ jobs:
       - name: Build & push (lingaro-azure-databricks-py312-ubuntu24-gemini)
         uses: docker/build-push-action@v6
         with:
-          context: lingaro-azure-databricks-py312-ubuntu24-gemini
+          context: lingaro-azure-databricks-py312-ubuntu24-gemini/.devcontainer
           file: lingaro-azure-databricks-py312-ubuntu24-gemini/.devcontainer/Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
