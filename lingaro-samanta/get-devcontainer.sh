@@ -5,7 +5,7 @@ set -euo pipefail
 # set template name (subdirectory in the repo)
 TEMPLATE=lingaro-samanta
 
-URL=https://github.com/Lingaro-Enterprise-PoC/devcontainers-templates.git
+URL=https://github.com/Lingaro/devcontainers-templates.git
 BRANCH=feature/samanta-ghcr
 REMOTE=devcontainers-templates
 DEST=.
