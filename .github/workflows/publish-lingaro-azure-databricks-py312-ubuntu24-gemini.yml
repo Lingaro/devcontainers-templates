@@ -3,6 +3,9 @@ name: publish-lingaro-azure-databricks-py312-ubuntu24-gemini
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - feature/gemini-ghcr
 
 permissions:
   contents: read
