@@ -1,12 +1,12 @@
 {
   "name": "Lingaro Azure Databricks Py312 Ubuntu24 Gemini",
-  "dockerComposeFile": "../docker-compose.yml",
+  "dockerComposeFile": "docker-compose.yml",
   "service": "lingaro-azure-databricks-py312-ubuntu24-gemini",
   "workspaceFolder": "/workspaces/lingaro-azure-databricks-py312-ubuntu24-gemini",
   "shutdownAction": "stopCompose",
-  "postCreateCommand": "${containerWorkspaceFolder}/scripts/post-create.sh",
-  "postAttachCommand": "${containerWorkspaceFolder}/scripts/post-attach.sh",
-  "postStartCommand": "${containerWorkspaceFolder}/scripts/post-start.sh",
+  "postCreateCommand": "scripts/post-create.sh",
+  "postAttachCommand": "scripts/post-attach.sh",
+  "postStartCommand": "scripts/post-start.sh",
   "customizations": {
     "vscode": {
       "extensions": [

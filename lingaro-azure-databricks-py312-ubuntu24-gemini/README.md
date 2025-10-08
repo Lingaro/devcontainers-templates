@@ -1,6 +1,6 @@
 # Lingaro Azure Databricks Gemini DevContainer
 
-DevContainer variant that pulls the `lingaro-azure-databricks-py312-ubuntu24-gemini:latest` image from your Azure Container Registry and adds support for Gemini tooling alongside Azure and Databricks integrations.
+DevContainer variant that pulls the `lingaro-azure-databricks-py312-ubuntu24-gemini:latest` image from your GitHub Container Registry and adds support for Gemini tooling alongside Azure and Databricks integrations.
 
 ## Quick Start
 
