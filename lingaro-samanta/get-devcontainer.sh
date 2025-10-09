@@ -6,7 +6,7 @@ set -euo pipefail
 TEMPLATE=lingaro-samanta
 
 URL=https://github.com/Lingaro/devcontainers-templates.git
-BRANCH=feature/samanta-ghcr
+BRANCH=main
 REMOTE=devcontainers-templates
 DEST=.
 
