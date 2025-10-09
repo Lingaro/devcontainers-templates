@@ -3,9 +3,6 @@ name: publish-samanta
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feature/samanta-ghcr
 
 permissions:
   contents: read
@@ -32,37 +29,54 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Compute next numeric tag
+        id: nexttag
+        env:
+          OWNER: ${{ github.repository_owner }}
+          PKG: lingaro-samanta
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          fetch() {
+            gh api --paginate -H "Accept: application/vnd.github+json" "$1" -q '.[]?.metadata.container.tags[]?' || true
+          }
+
+          TAGS=$(fetch "orgs/${OWNER}/packages/container/${PKG}/versions?per_page=100")
+          if [ -z "$TAGS" ]; then
+            TAGS=$(fetch "users/${OWNER}/packages/container/${PKG}/versions?per_page=100")
+          fi
+
+          NUMS=$(printf "%s\n" $TAGS | grep -E '^[0-9]+$' || true)
+
+          if [ -z "$NUMS" ]; then
+            NEXT=1
+          else
+            MAX=$(printf "%s\n" $NUMS | sort -n | tail -1)
+            NEXT=$((MAX + 1))
+          fi
+
+          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
+          echo "NEXT tag: $NEXT"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build & push (samanta)
+      - name: Build & push
         uses: docker/build-push-action@v6
         with:
-          context: lingaro-samanta
+          context: lingaro-samanta/.devcontainer/
           file: lingaro-samanta/.devcontainer/Dockerfile.samanta
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/${{ steps.owner.outputs.GITHUB_REPOSITORY_OWNER_LOWERCASE }}/lingaro-samanta:1
+            ghcr.io/${{ steps.owner.outputs.GITHUB_REPOSITORY_OWNER_LOWERCASE }}/lingaro-samanta:${{ steps.nexttag.outputs.next }}
             ghcr.io/${{ steps.owner.outputs.GITHUB_REPOSITORY_OWNER_LOWERCASE }}/lingaro-samanta:latest
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.title=lingaro-samanta
-          cache-from: type=gha,scope=lingaro-samanta-amd64
-          cache-to: type=gha,mode=max,scope=lingaro-samanta-amd64
-
-      - name: Build & push (dbx)
-        uses: docker/build-push-action@v6
-        with:
-          context: lingaro-samanta
-          file: lingaro-samanta/.devcontainer/Dockerfile.dbx164lts
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: |
-            ghcr.io/${{ steps.owner.outputs.GITHUB_REPOSITORY_OWNER_LOWERCASE }}/lingaro-dbx164lts:1
-            ghcr.io/${{ steps.owner.outputs.GITHUB_REPOSITORY_OWNER_LOWERCASE }}/lingaro-dbx164lts:latest
-          labels: |
-            org.opencontainers.image.source=https://github.com/${{ github.repository }}
-            org.opencontainers.image.title=lingaro-dbx164lts
-          cache-from: type=gha,scope=lingaro-dbx164lts-amd64
-          cache-to: type=gha,mode=max,scope=lingaro-dbx164lts-amd64
+            org.opencontainers.image.version=${{ steps.nexttag.outputs.next }}
+          cache-from: type=gha,scope=lingaro-samanta
+          cache-to: type=gha,mode=max,scope=lingaro-samanta,compression=zstd,compression-level=6
