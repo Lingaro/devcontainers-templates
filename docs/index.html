@@ -39,6 +39,7 @@
   </style>
 </head>
 <body>
+</body>
   <div class="wrap">
     <header class="hero">
       <h1>DevContainer – Quick Start</h1>
@@ -175,6 +176,20 @@
           <li>Cline is preinstalled. Open the Cline panel to start an agent session. You can point Cline to the same proxy/API key when selecting a model provider.</li>
           <li>If an LLM tool cannot connect, verify Docker is running and that <code>.devcontainer/.env</code> has a valid <code>LLM_API_KEY</code>. Rebuild the container after changes.</li>
         </ul>
+<h3>Specification</h3>
+<section>
+    <p><strong>Python:</strong> Version 3.12-slim, based on Debian Bookworm, optimized for lightweight development.</p>
+    <p><strong>Installed Tools:</strong></p>
+    <ul>
+      <li><strong>General utilities:</strong> Includes git, curl, vim, htop, telnet, net-tools for debugging and system administration.</li>
+      <li><strong>Azure CLI:</strong> Manage Microsoft Azure resources.</li>
+      <li><strong>Zulu OpenJDK 17:</strong> Java runtime environment for JVM-based applications.</li>
+      <li><strong>Node.js:</strong> Version 20, for JavaScript and AI tools installations.</li>
+      <li><strong>Elinks:</strong> A lightweight text-based web browser for command-line environments, facilitating quick navigation and debugging.</li>
+      <li><strong>AI Tools:</strong> GitHub Copilot, Cline, Anthropic's Claude Code, and Qwen Code, supporting AI-assisted coding and OpenAI API compatibility.</li>
+    </ul>
+    <p><strong>Use Cases:</strong> Data science workflows, Azure/Databricks integration, Python prototyping, and AI API interaction.</p>
+</section>
       </article>
 
     </section>
