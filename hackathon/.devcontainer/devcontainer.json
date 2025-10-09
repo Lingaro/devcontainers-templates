@@ -17,7 +17,8 @@
         "ms-python.pylint",
         "ms-python.black-formatter",
         "anthropic.claude-code",
-        "qwenlm.qwen-code-vscode-ide-companion"
+        "qwenlm.qwen-code-vscode-ide-companion",
+        "saoudrizwan.claude-dev"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",
