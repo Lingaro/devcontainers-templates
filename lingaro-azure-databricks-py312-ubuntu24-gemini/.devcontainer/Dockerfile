@@ -47,11 +47,29 @@ ENV PATH=$PATH:$JAVA_HOME/bin
 # Install new Databricks CLI
 RUN curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
-# Install Google Cloud SDK for Gemini support
-RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
-    && apt-get update && apt-get install -y google-cloud-sdk \
-    && rm -rf /var/lib/apt/lists/*
+# # Install Google Cloud SDK for Gemini support
+# RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
+#     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
+#     && apt-get update && apt-get install -y google-cloud-sdk \
+#     && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 20.x
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends curl ca-certificates gnupg; \
+    install -m 0755 -d /etc/apt/keyrings; \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+      | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg; \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" \
+      > /etc/apt/sources.list.d/nodesource.list; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends nodejs; \
+    # cleanup
+    rm -rf /var/lib/apt/lists/*
+
+# Install Gemini CLI
+RUN npm install -g @google/gemini-cli \
+    && npm cache clean --force
 
 # Install Python dependencies from requirements.txt
 COPY requirements.txt ./
