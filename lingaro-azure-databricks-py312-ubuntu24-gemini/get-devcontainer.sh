@@ -6,7 +6,7 @@ set -euo pipefail
 TEMPLATE=lingaro-azure-databricks-py312-ubuntu24-gemini
 
 URL=https://github.com/Lingaro/devcontainers-templates.git
-BRANCH=feature/gemini-ghcr
+BRANCH=main
 REMOTE=devcontainers-templates
 DEST=.
 
