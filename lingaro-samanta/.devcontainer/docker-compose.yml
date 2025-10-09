@@ -1,0 +1,123 @@
+services:
+  mariadb:
+    image: ${DB_IMAGE}
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: Europe/Warsaw
+    ports: []
+      # - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ${HOST_ABSOLUTE_PATH}/initdb:/docker-entrypoint-initdb.d:ro
+      - ${HOST_ABSOLUTE_PATH}/mariadb.cnf:/etc/mysql/conf.d/zz-custom.cnf:ro
+
+  dbx:
+    image: ${DBX_IMAGE}
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.dbx164lts
+    working_dir: /samanta # /opt/app
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    environment:
+      TZ: Europe/Warsaw
+      # spark
+      MAIN_CLASS: ${MAIN_CLASS:-com.pg.samanta.Main}
+      JAR_NAME: ${JAR_NAME:-PG-Samanta-ETL-assembly-1.0.168.jar}
+
+      AZ_ACCOUNT_KEY: ${AZ_ACCOUNT_KEY}
+      DB_URL: jdbc:mariadb://mariadb:3306/${MYSQL_DATABASE}?user=${MYSQL_USER}\&password=${MYSQL_PASSWORD}
+    volumes:
+      - ${HOST_ABSOLUTE_PATH}:/samanta # opt/app
+      - /tmp/samanta:/tmp/samanta
+      # - ./spark-conf:/opt/app/spark-conf:ro
+    command: ["bash", "-lc", "sleep infinity"]
+    tty: true
+    stdin_open: true
+    # entrypoint: >
+    #   bash -lc "
+    #   until mariadb -h mariadb -u$MYSQL_USER -p"$MYSQL_PASSWORD" -e 'SELECT 1' >/dev/null 2>&1;
+    #   do echo 'Waiting for MariaDB...'; sleep 2; done;
+    #   exec bash
+
+    #   #   test -f target/scala-2.12/$JAR_NAME || { echo 'Jar not found. Build it first with: docker compose run --rm samanta sbt clean assembly'; exit 1; }
+
+    #   #   echo 'Starting spark-submit...';
+    #   #   $SPARK_HOME/bin/spark-submit
+    #   #     --class $MAIN_CLASS
+    #   #     --conf spark.executor.cores=8
+    #   #     --conf spark.executor.memory=46g
+    #   #     --conf spark.driver.memory=56g
+    #   #     --conf spark.sql.shuffle.partitions=40
+    #   #     --conf spark.driver.extraJavaOptions=-XX:+UseG1GC
+    #   #     --conf spark.executor.extraJavaOptions=-XX:+UseG1GC
+    #   #     --conf spark.hadoop.fs.azure.io.retry.max.retries=10
+    #   #     --conf spark.shuffle.io.maxRetries=10
+    #   #     --conf spark.shuffle.io.retryWait=60s
+    #   #     --conf spark.driver.maxResultSize=32g
+    #   #     --conf spark.memory.offHeap.enabled=false
+    #   #     --conf spark.task.cpus=2
+    #   #     --conf spark.sql.parquet.compression.codec=zstd
+    #   #     --conf spark.hadoop.fs.azure.account.key.sasamantaprod.blob.core.windows.net=${AZ_ACCOUNT_KEY}
+    #   #     --conf spark.db.url=${DB_URL}
+    #   #     target/scala-2.12/$JAR_NAME
+    #   "
+
+  samanta:
+    image: ${SAMANTA_IMAGE}
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.samanta
+    restart: unless-stopped
+    volumes:
+      - "../:/samanta"
+      - /tmp/samanta:/tmp/samanta
+      - sbt_ivy:/home/user/.ivy2
+      - sbt_cache:/home/user/.sbt
+      - coursier_cache:/home/user/.cache/coursier
+    depends_on:
+      - mariadb
+    environment:
+      TZ: Europe/Warsaw
+      # SonarScanner
+      SONAR_TOKEN: ${SONAR_TOKEN}
+      SONAR_HOST: ${SONAR_HOST}
+      SONAR_ORGANIZATION: ${SONAR_ORGANIZATION}
+      SONAR_PROJECT: ${SONAR_PROJECT}
+      # MariaDB
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      # sbt
+      SBT_OPTS: "-Xmx2g -Xss2m -XX:+UseG1GC"
+      COURSIER_CACHE: "/home/user/.cache/coursier"
+      # Samanta
+      SAMANTA_COMPRESS: 0
+      SAMANTA_CHECKPOINT: 0
+      SAMANTA_PLATFORM: "DBR"
+      SAMANTA_CONF: "/dbfs/mnt/home/config"
+      SAMANTA_HOME: "/dbfs/mnt/home/samanta_home"
+      SAMANTA_COMPRESS_ADT: 0
+      SAMANTA_INCREMENTS_DISABLED: 1
+    working_dir: /samanta
+    entrypoint: >
+      bash -lc "
+      until mariadb -h mariadb -u$MYSQL_USER -p\"$MYSQL_PASSWORD\" -e 'SELECT 1' >/dev/null 2>&1;
+      do echo 'Waiting for MariaDB...'; sleep 2; done;
+      exec bash
+      "
+
+volumes:
+  mariadb_data:
+  sbt_ivy:
+  sbt_cache:
+  coursier_cache:
