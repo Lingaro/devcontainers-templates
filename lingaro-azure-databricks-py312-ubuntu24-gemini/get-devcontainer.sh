@@ -49,6 +49,9 @@ git archive "$REMOTE/$BRANCH:$TEMPLATE" | tar -x -C "$DEST"
 find . -type f -name '*.sh' -print0 | xargs -0 sed -i 's|\r$||' \
 || find . -type f -name '*.sh' -print0 | xargs -0 sed -i '' 's|\r$||'
 
+# make all .sh files executable
+find . -type f -name '*.sh' -print0 | xargs -0 chmod +x
+
 # update .env.example with absolute path
 if grep -q '^HOST_ABSOLUTE_PATH=' .devcontainer/.env.example 2>/dev/null; then
   WINDOWS_HOST_ABSOLUTE_PATH="$( (pwd -W 2>/dev/null) || true )"
