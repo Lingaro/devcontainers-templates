@@ -13,18 +13,18 @@
     html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
     a{color:var(--brand);text-decoration:none}
     a:hover{text-decoration:underline}
-    .wrap{max-width:980px;margin:32px auto;padding:0 16px}
-    .hero{padding:24px 20px 18px;border:1px solid #1f2937;background:linear-gradient(180deg,rgba(34,211,238,.08),rgba(34,211,238,.02));border-radius:18px}
+    .wrap{max-width:1158px;margin:32px auto;padding:0 16px}
+    .hero{padding:24px 20px 18px;border:1px solid #1f2937;background:linear-gradient(180deg,rgba(34,211,238,.08),rgba(34,211,238,.02));border-radius:18px;max-width:1126px;margin:0 auto}
     h1{font-size:34px;margin:0 0 8px}
     .lead{color:var(--muted);margin:0}
     .grid{display:grid;gap:18px;margin-top:22px}
-    @media(min-width:860px){.grid{grid-template-columns:1.1fr .9fr}}
-    .card{background:var(--card);border:1px solid #1f2937;border-radius:16px;padding:18px}
+    @media(min-width:860px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid #1f2937;border-radius:16px;padding:18px;max-width:1126px;margin:0 auto}
     h2{margin:0 0 10px;font-size:22px}
     h3{margin:20px 0 8px;font-size:18px}
     ol{margin:8px 0 0 20px}
-    code,kbd,pre{font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-    pre{background:var(--code);border:1px solid var(--code-border);color:#dbeafe;padding:12px;border-radius:12px;overflow:auto}
+    code,kbd,pre{font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:1em;line-height:1.55}
+    pre{background:var(--code);border:1px solid var(--code-border);color:#dbeafe;padding:12px;border-radius:12px;overflow:auto;font-size:.9em;line-height:1.55}
     .cmd{display:flex;gap:8px;align-items:center}
     .btn{cursor:pointer;border:1px solid #334155;background:#0f172a;color:#e2e8f0;border-radius:10px;padding:6px 10px;font-weight:600}
     .btn:hover{filter:brightness(1.1)}
@@ -35,6 +35,7 @@
     .kbd{border:1px solid #475569;background:#0f172a;padding:2px 6px;border-radius:6px}
     .steps li{margin-bottom:12px}
     .small{font-size:14px;color:var(--muted)}
+    img{max-height:300px;object-fit:contain}
   </style>
 </head>
 <body>
@@ -49,7 +50,7 @@
         <h2>Prerequisites</h2>
         <ul>
           <li>Git + GitHub account, and VS Code with the <strong>Dev Containers</strong> extension installed.</li>
-          <li>Access to <strong>Lingaro GenAI Proxy</strong> and a valid API key (will go into <code>.env</code> later).</li>
+          <li>Access to <strong>Lingaro GenAI Proxy</strong> and a valid API key (will go into <code>.env</code> later). Get it via the <a href="https://teams.microsoft.com/l/app/b7b3f061-aa7e-425e-b6f4-79495123e611?source=" target="_blank">Teams GenAI Proxy Bot</a>.</li>
           <li>Docker Desktop or Docker Engine running locally.</li>
         </ul>
 
@@ -66,11 +67,13 @@
   https://raw.githubusercontent.com/Lingaro/devcontainers-templates/main/hackathon/get-devcontainer.sh</pre>
               <button class="btn" data-copy="cmd-curl">Copy</button>
             </div>
+            <div class="small" style="text-align:center">or</div>
             <div class="cmd">
               <pre id="cmd-wget">wget -O get-devcontainer.sh \
   https://raw.githubusercontent.com/Lingaro/devcontainers-templates/main/hackathon/get-devcontainer.sh</pre>
               <button class="btn" data-copy="cmd-wget">Copy</button>
             </div>
+            <div class="small" style="text-align:center">or</div>
             <div class="small">PowerShell (Windows):</div>
             <div class="cmd">
               <pre id="cmd-ps">iwr https://raw.githubusercontent.com/Lingaro/devcontainers-templates/main/hackathon/get-devcontainer.sh -OutFile get-devcontainer.sh</pre>
@@ -90,11 +93,10 @@
           <li>
             <strong>Fill in environment variables</strong> – the installer will create a <code>.devcontainer/</code> folder with sample files, including <code>.env.example</code>.
             <div class="cmd">
-              <pre id="cmd-env">cp .devcontainer/.env.example .devcontainer/.env
-# Open .devcontainer/.env and fill in values
-# Most important: LLM_API_KEY=&lt;YOUR_LINGARO_GENAI_PROXY_KEY&gt;</pre>
+              <pre id="cmd-env">cp .devcontainer/.env.example .devcontainer/.env</pre>
               <button class="btn" data-copy="cmd-env">Copy</button>
             </div>
+            <div class="small">Open <code>.devcontainer/.env</code> and fill in values. Most important: <code>LLM_API_KEY=<YOUR_LINGARO_GENAI_PROXY_KEY></code></div>
             <div class="note">
               You can obtain your API key using the <strong>Lingaro GenAI Proxy Bot</strong> on Microsoft Teams: <a href="https://teams.microsoft.com/l/app/b7b3f061-aa7e-425e-b6f4-79495123e611?source=" target="_blank">Open Teams Bot</a>.
             </div>
@@ -102,6 +104,8 @@
           <li>
             <strong>Open in Dev Container</strong> – in VS Code click the <em>Dev Containers</em> icon in the bottom-left corner and select <em>Reopen in Container</em>.
             <div class="small">Or from the Command Palette: <span class="kbd">⇧⌘P</span> / <span class="kbd">Ctrl+Shift+P</span> → “Dev Containers: Reopen in Container”.</div>
+            <div class="note">If VS Code PATH is not set, an error may occur. Fix by running “Shell Command: Install 'code' command in PATH” (see section below).</div>
+            <img src="images/vscode-PATH.png" alt="VS Code PATH setting" style="width:100%;display:block;margin:8px auto;border-radius:12px;border:1px solid #1f2937" />
           </li>
           <li>
             <strong>Done!</strong> After a few moments your DevContainer will start with pre-installed tools: GitHub Copilot, Cline, Claude, Qwen.
@@ -130,45 +134,49 @@
           <li>After completing these steps, you can open VS Code directly from any terminal using <code>code .</code></li>
         </ol>
         <p>This method works for both VS Code Stable and VS Code Insiders.</p>
-      </article>
 
-      <aside class="card">
-        <h2>How to publish this page with GitHub Pages</h2>
+        <h2 style="margin-top:18px">Post‑installation: AI tools in your DevContainer</h2>
+        <p>These tools are preinstalled and ready after step 6: <span class="tag">GitHub Copilot</span> <span class="tag">Cline</span> <span class="tag">Claude</span> <span class="tag">Qwen</span>. They use your Lingaro GenAI Proxy key from <code>.devcontainer/.env</code> (<code>LLM_API_KEY</code>) where applicable.</p>
+        <img src="images/4aitools.jpg" alt="AI tools: Copilot, Cline, Claude, Qwen in VS Code" style="width:100%;display:block;margin:8px auto;border-radius:12px;border:1px solid #1f2937" />
+
+        <h3>Claude — first run (CLI)</h3>
         <ol>
-          <li>Place this file as <code>index.html</code> in your repo (e.g., branch <code>main</code>).</li>
-          <li>Go to <strong>Settings → Pages</strong>.</li>
-          <li>Under <em>Build and deployment</em> choose:<br>
-            <ul>
-              <li><strong>Source</strong>: <em>Deploy from a branch</em></li>
-              <li><strong>Branch</strong>: <em>main</em> and <em>/(root)</em> (or <code>/docs</code> if files are inside <code>docs/</code>).</li>
-            </ul>
+          <li>Terminal → New Terminal</li>
+          <li>Run: <code>claude</code></li>
+          <li>Follow recommended options:
+            <div class="small">Use recommended defaults shown in the screenshot.</div>
+            <img src="images/claude-setup1.jpg" alt="Claude CLI: recommended options" style="width:100%;display:block;margin:8px auto;border-radius:12px;border:1px solid #1f2937" />
           </li>
-          <li>Save. After ~1 minute, the site will be live at:<br>
-            <code>https://&lt;your-username&gt;.github.io/&lt;repo-name&gt;/</code>
+          <li>Terminal setup: choose recommended options
+            <img src="images/claude-setup2.jpg" alt="Claude terminal setup: recommended" style="width:100%;display:block;margin:8px auto;border-radius:12px;border:1px solid #1f2937" />
           </li>
+          <li>Trust this workspace: choose recommended
+            <img src="images/claude-setup3.jpg" alt="VS Code trust this workspace prompt: recommended" style="width:100%;display:block;margin:8px auto;border-radius:12px;border:1px solid #1f2937" />
+          </li>
+          <li>Optional: show help: <code>claude --help</code></li>
         </ol>
 
-        <h3>“docs/” Variant</h3>
-        <pre id="cmd-docs">mkdir -p docs && mv index.html docs/
-# Settings → Pages → Source: Deploy from a branch → Branch: main /docs</pre>
-        <button class="btn" data-copy="cmd-docs">Copy</button>
+        <h3>Qwen — first run (CLI)</h3>
+        <ol>
+          <li>Terminal → New Terminal</li>
+          <li>Run: <code>qwen</code></li>
+          <li>When asked to connect to the Qwen IDE plugin, you may decline (recommended for CLI‑only use).
+            <img src="images/qwen-setup1.jpg" alt="Qwen: IDE plugin prompt (decline)" style="width:100%;display:block;margin:8px auto;border-radius:12px;border:1px solid #1f2937" />
+          </li>
+          <li>Select authentication method: <strong>OpenAI</strong>.
+            <img src="images/qwen-setup2.jpg" alt="Qwen: select OpenAI authentication" style="width:100%;display:block;margin:8px auto;border-radius:12px;border:1px solid #1f2937" />
+          </li>
+          <li>Optional: show help: <code>qwen --help</code></li>
+        </ol>
 
-        <h3>Add a README</h3>
-        <pre id="cmd-readme">echo "# DevContainer – Quick Start" > README.md
-printf "\nSee: https://&lt;your-username&gt;.github.io/&lt;repo-name&gt;/\n" >> README.md</pre>
-        <button class="btn" data-copy="cmd-readme">Copy</button>
+        <h3>Notes</h3>
+        <ul>
+          <li>GitHub Copilot works out of the box in this DevContainer. Sign‑in may be requested by VS Code on first run.</li>
+          <li>Cline is preinstalled. Open the Cline panel to start an agent session. You can point Cline to the same proxy/API key when selecting a model provider.</li>
+          <li>If an LLM tool cannot connect, verify Docker is running and that <code>.devcontainer/.env</code> has a valid <code>LLM_API_KEY</code>. Rebuild the container after changes.</li>
+        </ul>
+      </article>
 
-        <h3>Commit & Push</h3>
-        <pre id="cmd-git">git add .
-git commit -m "feat: add DevContainer quickstart page"
-git push origin main</pre>
-        <button class="btn" data-copy="cmd-git">Copy</button>
-
-        <h3>Tip: Secret Files</h3>
-        <p class="small">Never commit your <code>.devcontainer/.env</code>. Add it to <code>.gitignore</code>:</p>
-        <pre id="cmd-gi">echo ".devcontainer/.env" >> .gitignore</pre>
-        <button class="btn" data-copy="cmd-gi">Copy</button>
-      </aside>
     </section>
 
     <section class="card" style="margin-top:18px">
