@@ -1,6 +1,6 @@
 # Lingaro Azure Databricks Gemini DevContainer
 
-DevContainer variant that pulls the `lingaro-azure-databricks-py312-ubuntu24-gemini:latest` image from your Azure Container Registry and adds support for Gemini tooling alongside Azure and Databricks integrations.
+DevContainer variant that pulls the `lingaro-azure-databricks-py312-ubuntu24-gemini:latest` image from your GitHub Container Registry and adds support for Gemini tooling alongside Azure and Databricks integrations.
 
 ## Quick Start
 
@@ -9,7 +9,7 @@ DevContainer variant that pulls the `lingaro-azure-databricks-py312-ubuntu24-gem
    cd lingaro-azure-databricks-py312-ubuntu24-gemini
    cp .env.example .env
    ```
-2. **Configure `.env`** – provide Azure service principal values, registry name (`AZURE_ACR_REGISTRY_NAME`), Databricks host/token (if needed), and secrets such as `GEMINI_API_KEY`.
+2. **Configure `.env`** – provide Azure service principal values, Databricks host/token (if needed), and secrets such as `GEMINI_API_KEY`.
 3. **Launch the container** – open the folder in VS Code using Dev Containers or run `docker compose up -d`.
 4. **Sign in** – execute `az login` and `databricks configure --token` inside the container to finish authentication.
 5. **Start coding** – port `8000` is forwarded and the recommended Python tooling is available out of the box.
