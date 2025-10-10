@@ -53,6 +53,7 @@
           <li>Git + GitHub account, and VS Code with the <strong>Dev Containers</strong> extension installed.</li>
           <li>Access to <strong>Lingaro GenAI Proxy</strong> and a valid API key (will go into <code>.env</code> later). Get it via the <a href="https://teams.microsoft.com/l/app/b7b3f061-aa7e-425e-b6f4-79495123e611?source=" target="_blank">Teams GenAI Proxy Bot</a>.</li>
           <li>Docker Desktop or Docker Engine running locally.</li>
+          <li>[Windows] git bash installed.</li>
         </ul>
 
         <h2>6-Step Setup</h2>
@@ -97,10 +98,25 @@
               <pre id="cmd-env">cp .devcontainer/.env.example .devcontainer/.env</pre>
               <button class="btn" data-copy="cmd-env">Copy</button>
             </div>
-            <div class="small">Open <code>.devcontainer/.env</code> and fill in values. Most important: <code>LLM_API_KEY=<YOUR_LINGARO_GENAI_PROXY_KEY></code></div>
+            <div class="small">Open <code>.devcontainer/.env</code> and fill in values. Most important: <code>API_KEY=<YOUR_LINGARO_GENAI_PROXY_KEY></code></div>
             <div class="note">
               You can obtain your API key using the <strong>Lingaro GenAI Proxy Bot</strong> on Microsoft Teams: <a href="https://teams.microsoft.com/l/app/b7b3f061-aa7e-425e-b6f4-79495123e611?source=" target="_blank">Open Teams Bot</a>.
             </div>
+          </li>
+          <li>
+            <strong>[Podman only].</strong>
+            If you are using Podman instead of Docker (ie. Docker is <strong>not</strong> installed):
+            <ol>
+              <li>Podman Desktop.
+                Got to Settings → Preferences → Docker Compatibility.
+                Set Enable for Docker Compatibility.
+              </li>
+              <li>VS Code.
+                Got to Settings → Extensions → Dev Containers.</br>
+                Set Dev > Containers: Docker Compose Path to <code>podman-compose</code> (macOS) or <code>podman compose</code> (Windows).</br>
+                Set Dev > Containers: Docker Path to <code>podman</code>.
+              </li>
+            </ol>
           </li>
           <li>
             <strong>Open in Dev Container</strong> – in VS Code click the <em>Dev Containers</em> icon in the bottom-left corner and select <em>Reopen in Container</em>.
