@@ -108,6 +108,14 @@ services:
       SAMANTA_HOME: "/dbfs/mnt/home/samanta_home"
       SAMANTA_COMPRESS_ADT: 0
       SAMANTA_INCREMENTS_DISABLED: 1
+      # Anthropic and OpenAI
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      ANTHROPIC_BASE_URL: ${ANTHROPIC_BASE_URL}
+      ANTHROPIC_AUTH_TOKEN: ${ANTHROPIC_AUTH_TOKEN}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL}
+      OPENAI_MODEL: ${OPENAI_MODEL}
     working_dir: /samanta
     entrypoint: >
       bash -lc "
