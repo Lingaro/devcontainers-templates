@@ -5,28 +5,19 @@ Devcontainer definition that runs against an GHCR-hosted images:
 - `ghcr.io/lingaro/lingaro-samanta:latest`
 - `ghcr.io/lingaro/lingaro-dbx164lts:latest`
 
-## Links
-
-[![Open in Dev Containers](https://img.shields.io/badge/Open%20in-Dev%20Containers-blue?logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Lingaro/devcontainers-templates)
-
-[![Open in Dev Containers (Insiders)](<https://img.shields.io/badge/Open%20in-Dev%20Containers%20(Insiders)-blue?logo=visualstudiocode>)](https://vscode.dev/redirect?url=vscode-insiders://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Lingaro/devcontainers-templates)
-
-## Links
-
-[![Open in Dev Containers](https://img.shields.io/badge/Open%20in-Dev%20Containers-blue?logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Lingaro/devcontainers-templates)
-
-[![Open in Dev Containers (Insiders)](<https://img.shields.io/badge/Open%20in-Dev%20Containers%20(Insiders)-blue?logo=visualstudiocode>)](https://vscode.dev/redirect?url=vscode-insiders://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Lingaro/devcontainers-templates)
-
 ## Quick Start
 
-1. Provide all required variables in `.devcontainer/.env`.
-2. Open this folder in VS Code and use Dev Containers extension command "Reopen in Container".
-3. Your workspace is mounted at `/samanta`.
+1. Get `get-devcontainer.sh` file and put it in a desired empty folder.
+   - If your OS is Windows use `git bash`.
+   - Try `curl -fsSLo get-devcontainer.sh https://raw.githubusercontent.com/Lingaro/devcontainers-templates/main/lingaro-samanta/get-devcontainer.sh`
+   - or `wget -O get-devcontainer.sh https://raw.githubusercontent.com/Lingaro/devcontainers-templates/main/lingaro-samanta/get-devcontainer.sh`
+2. Run it. Template files will be downloaded.
+3. Copy `.devcontainer/.env.example` to `.devcontainer/.env`.
+4. Provide all required variables in `.devcontainer/.env`.
+5. Open the folder in VS Code and use Dev Containers extension command "Reopen in Container".
+6. Your workspace is mounted at `/samanta`.
+7. Databricks container (dbx) bash can be open by `dbx` command (alias for `docker compose exec dbx bash`).
 
 ## Ports
 
 - none
-
-## Image expectation
-
-This template pulls the prebuilt image `lingaro-samanta:latest` from your GitHub Packages. A local Dockerfile is intentionally not included here.
