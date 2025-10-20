@@ -30,7 +30,12 @@
         "scala-lang.scala",
         "ms-azuretools.vscode-docker",
         "mhutchie.git-graph",
-        "editorconfig.editorconfig"
+        "editorconfig.editorconfig",
+        // "anthropic.claude-code",
+        "qwenlm.qwen-code-vscode-ide-companion",
+        "saoudrizwan.claude-dev",
+        "github.copilot",
+        "github.copilot-chat"
       ]
     }
   }
