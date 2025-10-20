@@ -58,8 +58,11 @@ jobs:
           echo "next=$NEXT" >> "$GITHUB_OUTPUT"
           echo "NEXT tag: $NEXT"
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+      - name: Install qemu-user-static (no Docker Hub)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static binfmt-support
+          sudo update-binfmts --enable qemu-*
 
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
