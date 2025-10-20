@@ -58,11 +58,14 @@ jobs:
           echo "next=$NEXT" >> "$GITHUB_OUTPUT"
           echo "NEXT tag: $NEXT"
 
-      - name: Install qemu-user-static (no Docker Hub)
+      - name: Install QEMU binfmt (no Docker Hub)
         run: |
+          set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y qemu-user-static binfmt-support
-          sudo update-binfmts --enable qemu-*
+          sudo apt-get install -y qemu-user-static qemu-user-binfmt
+          sudo systemctl restart systemd-binfmt
+          sudo update-binfmts --enable qemu-aarch64 qemu-arm qemu-ppc64le qemu-s390x qemu-riscv64 || true
+          update-binfmts --display | grep -E 'qemu-(aarch64|arm|ppc64le|s390x|riscv64)' || true
 
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
