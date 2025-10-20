@@ -16,8 +16,24 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Verify Docker Hub availability
+        id: check-hub
+        shell: bash
+        run: |
+          set -euo pipefail
 
+          echo "🔍 Checking Docker Hub status..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://auth.docker.io/token)
+
+          if [ "$STATUS" != "200" ] && [ "$STATUS" != "401" ]; then
+            echo "❌ Docker Hub seems DOWN (HTTP $STATUS from auth.docker.io/token)"
+            echo "💡 This is likely a Docker Hub outage (503/5xx)."
+            echo "ℹ️  Consider rerunning later or using a fallback base image (ECR Public or GHCR mirror)."
+            exit 1
+          fi
+
+          echo "✅ Docker Hub OK (auth.docker.io returned $STATUS)"
+      - uses: actions/checkout@v4
       - name: Verify Docker Hub availability
         id: check-hub
         shell: bash
