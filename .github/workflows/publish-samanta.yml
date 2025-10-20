@@ -62,9 +62,11 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y qemu-user-static qemu-user-binfmt
+          if dpkg -s qemu-user-static >/dev/null 2>&1; then
+            sudo apt-get purge -y qemu-user-static
+          fi
+          sudo apt-get install -y qemu-user-binfmt
           sudo systemctl restart systemd-binfmt
-          sudo update-binfmts --enable qemu-aarch64 qemu-arm qemu-ppc64le qemu-s390x qemu-riscv64 || true
           update-binfmts --display | grep -E 'qemu-(aarch64|arm|ppc64le|s390x|riscv64)' || true
 
       - name: Set up Buildx
