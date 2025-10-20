@@ -16,6 +16,8 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Verify Docker Hub availability
         id: check-hub
         shell: bash
