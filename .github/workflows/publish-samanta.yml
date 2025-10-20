@@ -18,6 +18,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Verify Docker Hub availability
+        id: check-hub
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "🔍 Checking Docker Hub status..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://auth.docker.io/token)
+
+          if [ "$STATUS" != "200" ] && [ "$STATUS" != "401" ]; then
+            echo "❌ Docker Hub seems DOWN (HTTP $STATUS from auth.docker.io/token)"
+            echo "💡 This is likely a Docker Hub outage (503/5xx)."
+            echo "ℹ️  Consider rerunning later or using a fallback base image (ECR Public or GHCR mirror)."
+            exit 1
+          fi
+
+          echo "✅ Docker Hub OK (auth.docker.io returned $STATUS)"
+
       - name: Get repo owner in lowercase
         id: owner
         run: echo "GITHUB_REPOSITORY_OWNER_LOWERCASE=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
@@ -58,14 +76,8 @@ jobs:
           echo "next=$NEXT" >> "$GITHUB_OUTPUT"
           echo "NEXT tag: $NEXT"
 
-      - name: Install QEMU binfmt (no Docker Hub)
-        run: |
-          set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y qemu-user-static qemu-user-binfmt
-          sudo systemctl restart systemd-binfmt
-          sudo update-binfmts --enable qemu-aarch64 qemu-arm qemu-ppc64le qemu-s390x qemu-riscv64 || true
-          update-binfmts --display | grep -E 'qemu-(aarch64|arm|ppc64le|s390x|riscv64)' || true
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
