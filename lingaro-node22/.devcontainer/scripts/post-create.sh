@@ -5,9 +5,8 @@ set -euo pipefail
 exec "$@"
 
 # Set up alias for easier rebuild of the prod container
-echo "alias dbx='docker compose up --build -d prod'" >> ~/.bashrc
-source ~/.bashrc
-
+echo "alias prodbuild='docker compose up --build -d prod'" >> ~/.bashrc
 # Set up alias for easier access to the prod container bash
-echo "alias dbx='docker compose exec prod bash'" >> ~/.bashrc
+echo "alias prodbash='docker compose exec prod bash'" >> ~/.bashrc
+# Reload bashrc to apply the changes
 source ~/.bashrc
