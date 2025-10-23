@@ -1,0 +1,5 @@
+# Python tools you want available in the devcontainer
+# Keep empty or add minimal utilities; Databricks & PySpark intentionally excluded
+# Example tools:
+# ipython
+# httpie

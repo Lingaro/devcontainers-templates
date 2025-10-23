@@ -1,0 +1,32 @@
+name: node22
+
+services:
+  dev:
+    container_name: node22-dev
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      target: dev
+    volumes:
+      - ..:/app:cached
+      - node_modules:/app/node_modules
+    ports:
+      - "3000:3000"
+    tty: true
+    init: true
+    command: bash
+
+  prod:
+    container_name: node22-prod
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      target: prod
+    ports:
+      - "3001:3000"
+    tty: true
+    init: true
+    command: node build/index.js
+
+volumes:
+  node_modules:
