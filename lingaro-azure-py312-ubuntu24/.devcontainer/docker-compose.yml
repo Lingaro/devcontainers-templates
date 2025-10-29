@@ -1,14 +1,14 @@
 services:
   lingaro-azure-py312-ubuntu24:
-    image: ${AZURE_ACR_REGISTRY_NAME}/lingaro-azure-py312-ubuntu24:latest
+    image: ${IMAGE}
     volumes:
       - ../:/workspaces:cached
     ports:
-      - 8005:8000
+      - 8004:8000
     env_file:
       - ./.env
     environment:
       - AZURE_TENANT_ID=${AZURE_TENANT_ID}
       - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
       - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
-    command: /bin/bash -c "while sleep 1000; do :; done" 
+    command: /bin/bash -c "while sleep 1000; do :; done"
