@@ -1,23 +1,26 @@
 {
   "name": "lingaro-azure-databricks-py312-ubuntu24",
-  "dockerComposeFile": [
-    "../docker-compose.yml"
-  ],
+  "dockerComposeFile": ["docker-compose.yml"],
   "service": "lingaro-azure-databricks-py312-ubuntu24",
-  "shutdownAction": "none",
-  "features": {},
+  "shutdownAction": "stopCompose",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+  "containerEnv": {
+    "COMPOSE_FILE": "${containerWorkspaceFolder}/.devcontainer/docker-compose.yml"
+  },
   "workspaceFolder": "/workspaces/lingaro-azure-databricks-py312-ubuntu24",
-  "postCreateCommand": "${containerWorkspaceFolder}/scripts/post-create.sh",
+  "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-create.sh",
   "updateContentCommand": "",
-  "postStartCommand": "${containerWorkspaceFolder}/scripts/post-start.sh",
-  "postAttachCommand": "${containerWorkspaceFolder}/scripts/post-attach.sh",
+  "postStartCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-start.sh",
+  "postAttachCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-attach.sh",
   "customizations": {
     "vscode": {
       "settings": {
         "editor.tabSize": 2,
         "editor.insertSpaces": true,
         "editor.detectIndentation": false,
-        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.defaultProfile.linux": "bash",
         "python.defaultInterpreterPath": "/usr/bin/python3.12",
         "python.linting.enabled": true,
         "python.linting.pylintEnabled": true,
@@ -33,7 +36,10 @@
         "ms-python.pylint",
         "ms-azuretools.vscode-azurecli",
         "ms-vscode.azure-account",
-        "saoudrizwan.claude-dev"
+        "saoudrizwan.claude-dev",
+        "qwenlm.qwen-code-vscode-ide-companion",
+        "github.copilot",
+        "github.copilot-chat"
       ]
     }
   },
