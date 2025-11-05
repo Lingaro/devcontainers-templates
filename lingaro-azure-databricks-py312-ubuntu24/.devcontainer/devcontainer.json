@@ -9,7 +9,7 @@
   "containerEnv": {
     "COMPOSE_FILE": "${containerWorkspaceFolder}/.devcontainer/docker-compose.yml"
   },
-  "workspaceFolder": "/workspaces/lingaro-azure-databricks-py312-ubuntu24",
+  "workspaceFolder": "/workspaces",
   "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-create.sh",
   "updateContentCommand": "",
   "postStartCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-start.sh",

@@ -3,11 +3,13 @@
   "dockerComposeFile": ["docker-compose.yml"],
   "service": "lingaro-azure-py312-ubuntu24",
   "shutdownAction": "stopCompose",
-  "features": {},
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
   "containerEnv": {
     "COMPOSE_FILE": "${containerWorkspaceFolder}/.devcontainer/docker-compose.yml"
   },
-  "workspaceFolder": "/workspaces/lingaro-azure-py312-ubuntu24",
+  "workspaceFolder": "/workspaces",
   "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-create.sh",
   "updateContentCommand": "",
   "postStartCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-start.sh",
