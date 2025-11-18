@@ -239,6 +239,27 @@ docker compose logs -f
 docker compose down -v
 ```
 
+### macOS Permission Issues
+
+If you encounter `permission denied` errors on macOS related to `mariadb.cnf`:
+
+```bash
+# The mariadb.cnf mount is commented out by default to avoid macOS permission issues
+# If you need custom MariaDB configuration:
+
+# 1. Copy the example file
+cp mariadb.cnf.example mariadb.cnf
+
+# 2. Edit your custom configuration
+# nano mariadb.cnf
+
+# 3. Uncomment the volume mount in .devcontainer/docker-compose.yml
+# Find this line and uncomment it:
+# - ${HOST_ABSOLUTE_PATH}/mariadb.cnf:/etc/mysql/conf.d/zz-custom.cnf:ro
+```
+
+**Alternative**: Place configuration files in the `initdb/` directory which is mounted as a directory (works better on macOS).
+
 ### Databricks Connection Issues
 
 ```bash

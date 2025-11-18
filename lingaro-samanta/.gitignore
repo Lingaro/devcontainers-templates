@@ -1,0 +1,28 @@
+# Environment configuration
+.env
+.devcontainer/.env
+
+# MariaDB custom configuration (use mariadb.cnf.example as template)
+mariadb.cnf
+
+# sbt / Scala
+target/
+project/target/
+project/project/
+.bsp/
+.metals/
+.bloop/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+.DS_Store
+
+# Build artifacts
+*.jar
+*.class
+*.log
+
+# Database
+initdb/*.sql
