@@ -17,7 +17,8 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
       - ${HOST_ABSOLUTE_PATH}/initdb:/docker-entrypoint-initdb.d:ro
-      - ${HOST_ABSOLUTE_PATH}/mariadb.cnf:/etc/mysql/conf.d/zz-custom.cnf:ro
+      # Optional: Custom MariaDB configuration (create mariadb.cnf in project root if needed)
+      # - ${HOST_ABSOLUTE_PATH}/mariadb.cnf:/etc/mysql/conf.d/zz-custom.cnf:ro
 
   dbx:
     image: ${DBX_IMAGE}
