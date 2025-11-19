@@ -1,0 +1,10 @@
+# Spark configuration for CCEP UDP
+spark:
+  app_name: "CCEP-UDP-Application"
+  master: "local[*]"
+  config:
+    spark.sql.adaptive.enabled: "true"
+    spark.sql.adaptive.coalescePartitions.enabled: "true"
+    spark.sql.execution.arrow.pyspark.enabled: "true"
+    spark.serializer: "org.apache.spark.serializer.KryoSerializer"
+    spark.sql.warehouse.dir: "/tmp/spark-warehouse"

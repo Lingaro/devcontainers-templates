@@ -1,0 +1,8 @@
+# Databricks configuration
+host: ${DATABRICKS_HOST}
+token: ${DATABRICKS_TOKEN}
+cluster_id: ${DATABRICKS_CLUSTER_ID}
+
+# Paths
+workspace_path: /Workspace/Users/${DATABRICKS_USER}
+dbfs_path: /FileStore/shared_uploads/${DATABRICKS_USER}

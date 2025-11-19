@@ -1,0 +1,58 @@
+services:
+
+  lingaro-azure-py310-ccep-udp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lingaro-azure-py310-ccep-udp
+    volumes:
+      - .:/workspaces/lingaro-azure-py310-ccep-udp:cached
+      - ~/.gitconfig:/root/.gitconfig:ro
+      - ~/.ssh:/root/.ssh:ro
+      - uv-cache:/root/.cache/uv  # UV package cache
+      - pip-cache:/root/.cache/pip  # Pip cache
+      - hadoop-data:/tmp/hadoop-root  # Hadoop data persistence
+    ports:
+      - "${JUPYTER_PORT:-8888}:${JUPYTER_PORT:-8888}"  # Jupyter Lab
+      - "${SPARK_UI_PORT:-4040}:${SPARK_UI_PORT:-4040}"  # Spark UI
+      - "${HADOOP_NAMENODE_PORT:-9870}:${HADOOP_NAMENODE_PORT:-9870}"  # Hadoop NameNode UI
+      - "${HADOOP_DATANODE_PORT:-9864}:${HADOOP_DATANODE_PORT:-9864}"  # Hadoop DataNode UI
+      - "${APP_PORT:-8000}:${APP_PORT:-8000}"  # Application
+    environment:
+      - COMPOSE_BAKE=true  # Enable Docker Buildx Bake for better performance
+      - JUPYTER_TOKEN=${JUPYTER_TOKEN:-}
+      - JUPYTER_PORT=${JUPYTER_PORT:-8888}
+      - SPARK_UI_PORT=${SPARK_UI_PORT:-4040}
+      - HADOOP_NAMENODE_PORT=${HADOOP_NAMENODE_PORT:-9870}
+      - HADOOP_DATANODE_PORT=${HADOOP_DATANODE_PORT:-9864}
+      - APP_PORT=${APP_PORT:-8000}
+      # Python and Spark environment variables
+      - PYTHONPATH=/workspaces/lingaro-azure-py310-ccep-udp:/workspaces/lingaro-azure-py310-ccep-udp/src
+      - PYSPARK_PYTHON=python
+      - PYSPARK_DRIVER_PYTHON=python
+      # Hadoop environment variables
+      - HADOOP_HOME=/opt/hadoop
+      - HADOOP_CONF_DIR=/opt/hadoop/etc/hadoop
+      - HADOOP_COMMON_LIB_NATIVE_DIR=/opt/hadoop/lib/native
+      - HADOOP_OPTS=-Djava.library.path=/opt/hadoop/lib/native
+      # Java environment
+      # - JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+      # Azure credentials
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID:-}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID:-}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET:-}
+    working_dir: /workspaces/lingaro-azure-py310-ccep-udp
+    # command: /bin/bash -c "/workspaces/lingaro-azure-py310-ccep-udp/scripts/post-start.sh && tail -f /dev/null"
+    tty: true
+    stdin_open: true
+    deploy:
+      resources:
+        limits:
+          memory: 12G
+        reservations:
+          memory: 8G
+
+volumes:
+  uv-cache:
+  pip-cache:
+  hadoop-data:
