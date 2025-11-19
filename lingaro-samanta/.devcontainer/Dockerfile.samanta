@@ -67,6 +67,10 @@ RUN useradd -m -s /bin/bash user \
 RUN mkdir /samanta \
     && chown user:user /samanta
 
+# Prepare sbt / coursier cache directories so named volumes are writable
+RUN mkdir -p /home/user/.cache/coursier /home/user/.sbt /home/user/.ivy2 \
+    && chown -R user:user /home/user/.cache /home/user/.sbt /home/user/.ivy2 || true
+
 # AI TOOLS INSTALLATION start
 # Install Node.js
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \

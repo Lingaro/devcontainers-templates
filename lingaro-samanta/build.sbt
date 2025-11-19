@@ -1,4 +1,7 @@
 // build.sbt
+import sbt._
+import sbt.Keys._
+
 name := "PG-Samanta-ETL"
 
 // after update, please rebuild with sbt
@@ -7,6 +10,7 @@ version := "1.0.168"
 scalaVersion := "2.12.20"
 val sparkVersion = "3.5.2"
 
+lazy val idePackagePrefix = settingKey[Option[String]]("Package prefix for IDE")
 idePackagePrefix := Some("com.pg.samanta")
 Global / excludeLintKeys += idePackagePrefix
 
@@ -45,7 +49,7 @@ coverageMinimumStmtPerFile := 0
 coverageMinimumBranchPerFile := 0
 
 // for code quality report
-ThisBuild / scapegoatVersion := "3.1.8"
+// ThisBuild / scapegoatVersion := "3.1.8"
 
 // for printing application version
 lazy val root = (project in file(".")).enablePlugins(BuildInfoPlugin)
