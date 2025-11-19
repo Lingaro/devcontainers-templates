@@ -39,39 +39,8 @@ if [ -f "requirements-dev.txt" ]; then
     pip install -r requirements-dev.txt
 fi
 
-# Initialize Hadoop if not already done
-if [ ! -d "/tmp/hadoop-root/dfs" ]; then
-    echo "🐘 Initializing Hadoop filesystem..."
-    
-    # Create SSH keys for Hadoop in a writable location
-    # Note: /root/.ssh is mounted read-only from host, so we use /tmp/hadoop-ssh
-    HADOOP_SSH_DIR="/tmp/hadoop-ssh"
-    mkdir -p "$HADOOP_SSH_DIR"
-    chmod 700 "$HADOOP_SSH_DIR"
-    
-    if [ ! -f "$HADOOP_SSH_DIR/id_rsa" ]; then
-        ssh-keygen -t rsa -P '' -f "$HADOOP_SSH_DIR/id_rsa"
-        cat "$HADOOP_SSH_DIR/id_rsa.pub" >> "$HADOOP_SSH_DIR/authorized_keys"
-        chmod 600 "$HADOOP_SSH_DIR/authorized_keys"
-        
-        # Create SSH config to use the Hadoop SSH keys
-        cat > "$HADOOP_SSH_DIR/config" << EOF
-Host localhost
-    IdentityFile $HADOOP_SSH_DIR/id_rsa
-    StrictHostKeyChecking no
-    UserKnownHostsFile /dev/null
-EOF
-        chmod 600 "$HADOOP_SSH_DIR/config"
-        
-        # Link to SSH config (SSH will check ~/.ssh/config first, then fall back)
-        # Since /root/.ssh is read-only, we'll use SSH_CONFIG env var in post-start
-        echo "export SSH_CONFIG=$HADOOP_SSH_DIR/config" >> /tmp/hadoop-env.sh
-    fi
-    
-    # Format namenode
-    mkdir -p /tmp/hadoop-root/dfs/name /tmp/hadoop-root/dfs/data
-    $HADOOP_HOME/bin/hdfs namenode -format -force
-fi
+# Hadoop is configured in standalone mode (no HDFS setup needed)
+echo "🐘 Hadoop configured in standalone mode"
 
 # Configure Git LFS for Hugging Face models
 echo "🔧 Configuring Git LFS..."
@@ -103,5 +72,5 @@ fi
 echo "✅ CCEP UDP post-create setup complete!"
 echo "📖 Next steps:"
 echo "   1. Copy .env.example to .env and configure your Azure credentials"
-echo "   2. Start Hadoop with: start-hadoop"
-echo "   3. Access Jupyter Lab at: http://localhost:${JUPYTER_PORT}"
+echo "   2. Access Jupyter Lab at: http://localhost:${JUPYTER_PORT}"
+echo "   3. Hadoop is available in standalone mode for local processing"

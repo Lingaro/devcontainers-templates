@@ -15,16 +15,12 @@ services:
     ports:
       - "${JUPYTER_PORT:-8888}:${JUPYTER_PORT:-8888}"  # Jupyter Lab
       - "${SPARK_UI_PORT:-4040}:${SPARK_UI_PORT:-4040}"  # Spark UI
-      - "${HADOOP_NAMENODE_PORT:-9870}:${HADOOP_NAMENODE_PORT:-9870}"  # Hadoop NameNode UI
-      - "${HADOOP_DATANODE_PORT:-9864}:${HADOOP_DATANODE_PORT:-9864}"  # Hadoop DataNode UI
       - "${APP_PORT:-8000}:${APP_PORT:-8000}"  # Application
     environment:
       - COMPOSE_BAKE=true  # Enable Docker Buildx Bake for better performance
       - JUPYTER_TOKEN=${JUPYTER_TOKEN:-}
       - JUPYTER_PORT=${JUPYTER_PORT:-8888}
       - SPARK_UI_PORT=${SPARK_UI_PORT:-4040}
-      - HADOOP_NAMENODE_PORT=${HADOOP_NAMENODE_PORT:-9870}
-      - HADOOP_DATANODE_PORT=${HADOOP_DATANODE_PORT:-9864}
       - APP_PORT=${APP_PORT:-8000}
       # Python and Spark environment variables
       - PYTHONPATH=/workspaces/lingaro-azure-py310-ccep-udp:/workspaces/lingaro-azure-py310-ccep-udp/src

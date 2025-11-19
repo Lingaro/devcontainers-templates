@@ -33,8 +33,6 @@ RUN apt-get update && apt-get install -y \
     procps \
     # Shell and SSH tools
     zsh \
-    openssh-client \
-    openssh-server \
     rsync \
     # Java Development Kit
     openjdk-11-jdk && \
@@ -77,19 +75,10 @@ ENV HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
 ENV HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
 ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
 
-# Create necessary directories for Hadoop
+# Create necessary directories for Hadoop (standalone mode)
 RUN mkdir -p /home/hadoop/logs && \
     mkdir -p /tmp/hadoop-root && \
     chmod 755 /tmp/hadoop-root
-
-# Configure SSH for Hadoop (create directory for SSH keys and configure sshd)
-RUN mkdir -p /tmp/hadoop-ssh /run/sshd && \
-    chmod 700 /tmp/hadoop-ssh && \
-    # Configure sshd to allow root login and use alternate authorized_keys location
-    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-    echo "AuthorizedKeysFile /tmp/hadoop-ssh/authorized_keys %h/.ssh/authorized_keys" >> /etc/ssh/sshd_config && \
-    echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config && \
-    echo "StrictModes no" >> /etc/ssh/sshd_config
 
 # Copy Hadoop configuration files
 COPY hadoop-config/core-site.xml $HADOOP_CONF_DIR/core-site.xml
@@ -98,23 +87,19 @@ COPY hadoop-config/core-site.xml $HADOOP_CONF_DIR/core-site.xml
 # SPARK INSTALLATION AND CONFIGURATION
 # ==============================================================================
 # Re-declare ARGs to make them available in this build context
-ARG SPARK_VERSION=3.5.6
-ARG HADOOP_VERSION=3.3
-ARG SPARK_PACKAGE="spark-${SPARK_VERSION}-bin-hadoop3"
+ARG SPARK_VERSION=3.5.7
+ARG HADOOP_VERSION=3
+ARG SPARK_PACKAGE="spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}"
 ARG SPARK_ARCHIVE="${SPARK_PACKAGE}.tgz"
 ARG SPARK_DOWNLOAD_URL="https://downloads.apache.org/spark/spark-${SPARK_VERSION}/${SPARK_ARCHIVE}"
 
-# Debug: Print the URLs being used
-RUN echo "SPARK_DOWNLOAD_URL: ${SPARK_DOWNLOAD_URL}" && \
-    echo "SPARK_ARCHIVE: ${SPARK_ARCHIVE}"
-
-# Download and extract Spark using versions from ARG
-RUN mkdir -p /opt/spark /opt/spark/logs && chmod -R 755 /opt/spark && \
-    cd /opt/spark
-
-RUN wget ${SPARK_DOWNLOAD_URL} \
-    && tar -xzf ${SPARK_ARCHIVE} --strip-components=1 \
-    && rm ${SPARK_ARCHIVE}
+# Download and extract Spark
+RUN wget ${SPARK_DOWNLOAD_URL} && \
+    tar -xzf ${SPARK_ARCHIVE} && \
+    mv ${SPARK_PACKAGE} /opt/spark && \
+    rm ${SPARK_ARCHIVE} && \
+    mkdir -p /opt/spark/logs && \
+    chmod -R 755 /opt/spark
 
 # Configure environment variables
 ENV SPARK_HOME=/opt/spark
