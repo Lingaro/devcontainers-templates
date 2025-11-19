@@ -73,24 +73,6 @@ EOF
     $HADOOP_HOME/bin/hdfs namenode -format -force
 fi
 
-# Create CCEP UDP project structure if not exists
-echo "📁 Setting up CCEP UDP project structure..."
-
-mkdir -p src/databricks/ccep_udp/tests
-mkdir -p src/databricks/master/tests
-mkdir -p src/databricks/commercial/tests
-mkdir -p src/databricks/scm/tests
-mkdir -p src/databricks/marketing/tests
-mkdir -p src/databricks/finance/tests
-mkdir -p data/input
-mkdir -p data/output
-mkdir -p configs
-mkdir -p notebooks
-mkdir -p logs
-
-# Create __init__.py files for proper Python module structure
-find src -type d -name "*.py" -prune -o -type d -exec touch {}/__init__.py \;
-
 # Configure Git LFS for Hugging Face models
 echo "🔧 Configuring Git LFS..."
 git lfs install --system || git lfs install || echo "✅ Git LFS already configured"
