@@ -10,6 +10,14 @@
   "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-create.sh",
   "postStartCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-start.sh",
   "postAttachCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-attach.sh",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "moby": true,
+      "installDockerBuildx": true,
+      "version": "latest",
+      "dockerDashComposeVersion": "v2"
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": [

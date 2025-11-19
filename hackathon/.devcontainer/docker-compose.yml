@@ -3,6 +3,7 @@ services:
     image: ${IMAGE}
     volumes:
       - ../:/workspaces:cached
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "8000:8000"
     env_file:
