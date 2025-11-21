@@ -22,6 +22,7 @@ RUN apt-get -q update \
       vim \
       cifs-utils \
       sudo \
+      zsh \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -66,17 +67,6 @@ RUN useradd -m -s /bin/bash user \
 
 RUN mkdir /samanta \
     && chown user:user /samanta
-
-# Prepare sbt / coursier cache directories so named volumes are writable
-# Create a project-owned cache directory and set XDG_CACHE_HOME so sbt/coursier
-# will use a writable location even when /home/user is mounted read-only.
-RUN mkdir -p /home/user/.sbt /home/user/.ivy2 \
-    && mkdir -p /samanta/.cache/coursier /samanta/.cache/sbt \
-    && chown -R user:user /samanta/.cache /home/user/.sbt /home/user/.ivy2
-
-# Prefer using the project cache location at runtime
-ENV XDG_CACHE_HOME=/samanta/.cache
-ENV COURSIER_CACHE=/samanta/.cache/coursier
 
 # AI TOOLS INSTALLATION start
 # Install Node.js
