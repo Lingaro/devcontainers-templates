@@ -103,8 +103,18 @@ RUN mkdir -p ${SPARK_HOME}/jars \
       -o ${SPARK_HOME}/jars/delta-storage-3.3.1.jar
 
 # MariaDB JDBC
-RUN curl -fsSL https://downloads.mariadb.com/Connectors/java/connector-java-3.3.2/mariadb-java-client-3.3.2.jar \
-      -o ${SPARK_HOME}/jars/mariadb-java-client.jar
+ARG MARIADB_JDBC_VER=3.3.2
+RUN mkdir -p ${SPARK_HOME}/jars \
+    && curl -fSL --retry 5 --retry-connrefused --retry-delay 2 --connect-timeout 15 \
+        "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/${MARIADB_JDBC_VER}/mariadb-java-client-${MARIADB_JDBC_VER}.jar" \
+        -o ${SPARK_HOME}/jars/mariadb-java-client.jar \
+    || (echo "Primary download failed, trying alternate mirror..." \
+    && curl -fSL --retry 5 --retry-connrefused --retry-delay 2 --connect-timeout 15 \
+        "https://repo.maven.apache.org/maven2/org/mariadb/jdbc/mariadb-java-client/${MARIADB_JDBC_VER}/mariadb-java-client-${MARIADB_JDBC_VER}.jar" \
+        -o ${SPARK_HOME}/jars/mariadb-java-client.jar)
+
+# Install Databricks CLI (new Go-based CLI)
+RUN curl -fsSL https://raw.githubusercontent.com/databricks/cli/main/install.sh | bash -s -- v0.278.0
 
 # Install Databricks CLI (new Go-based CLI)
 RUN curl -fsSL https://raw.githubusercontent.com/databricks/cli/main/install.sh | bash -s -- v0.278.0
