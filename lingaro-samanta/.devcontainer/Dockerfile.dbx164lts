@@ -113,8 +113,8 @@ RUN mkdir -p ${SPARK_HOME}/jars \
         "https://repo.maven.apache.org/maven2/org/mariadb/jdbc/mariadb-java-client/${MARIADB_JDBC_VER}/mariadb-java-client-${MARIADB_JDBC_VER}.jar" \
         -o ${SPARK_HOME}/jars/mariadb-java-client.jar)
 
-# Install Databricks CLI (new Go-based CLI)
-RUN curl -fsSL https://raw.githubusercontent.com/databricks/cli/main/install.sh | bash -s -- v0.278.0
+# Databricks CLI
+RUN curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
 # PySpark + Delta
 # delta-spark 3.2.0, not 3.3.1, due to compatibility issues
@@ -129,8 +129,7 @@ RUN python3.12 -m venv "$VIRTUAL_ENV" \
        azure-storage-file-datalake==12.17.0
 ENV PATH="$VIRTUAL_ENV/bin:$PATH" \
     PYSPARK_PYTHON=python \
-    PYSPARK_DRIVER_PYTHON=python \
-    PATH="/usr/local/bin:$VIRTUAL_ENV/bin:$PATH"
+    PYSPARK_DRIVER_PYTHON=python
 
 # Verify installations
 RUN java -version \
