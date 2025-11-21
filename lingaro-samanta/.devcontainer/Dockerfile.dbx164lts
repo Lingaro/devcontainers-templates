@@ -116,9 +116,6 @@ RUN mkdir -p ${SPARK_HOME}/jars \
 # Install Databricks CLI (new Go-based CLI)
 RUN curl -fsSL https://raw.githubusercontent.com/databricks/cli/main/install.sh | bash -s -- v0.278.0
 
-# Install Databricks CLI (new Go-based CLI)
-RUN curl -fsSL https://raw.githubusercontent.com/databricks/cli/main/install.sh | bash -s -- v0.278.0
-
 # PySpark + Delta
 # delta-spark 3.2.0, not 3.3.1, due to compatibility issues
 ENV VIRTUAL_ENV=/opt/venv
@@ -132,7 +129,8 @@ RUN python3.12 -m venv "$VIRTUAL_ENV" \
        azure-storage-file-datalake==12.17.0
 ENV PATH="$VIRTUAL_ENV/bin:$PATH" \
     PYSPARK_PYTHON=python \
-    PYSPARK_DRIVER_PYTHON=python
+    PYSPARK_DRIVER_PYTHON=python \
+    PATH="/usr/local/bin:$VIRTUAL_ENV/bin:$PATH"
 
 # Verify installations
 RUN java -version \
