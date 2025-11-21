@@ -129,8 +129,7 @@ RUN python3.12 -m venv "$VIRTUAL_ENV" \
        azure-storage-file-datalake==12.17.0
 ENV PATH="$VIRTUAL_ENV/bin:$PATH" \
     PYSPARK_PYTHON=python \
-    PYSPARK_DRIVER_PYTHON=python \
-    PATH="/usr/local/bin:$VIRTUAL_ENV/bin:$PATH"
+    PYSPARK_DRIVER_PYTHON=python
 
 # Verify installations
 RUN java -version \
