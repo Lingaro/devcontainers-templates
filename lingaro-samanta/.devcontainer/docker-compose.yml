@@ -129,8 +129,6 @@ services:
           echo "Waiting for MariaDB...";
           sleep 2;
         done;
-
-        exec ${DEFAULT_SHELL}
       '
 
 volumes:

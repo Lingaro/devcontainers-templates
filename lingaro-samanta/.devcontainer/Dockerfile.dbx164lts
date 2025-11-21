@@ -137,6 +137,7 @@ RUN java -version \
     && python3.12 --version \
     && R --version \
     && ${SPARK_HOME}/bin/spark-submit --version \
-    && databricks --version
+    && databricks --version \
+    && zsh --version
 
 CMD ["/bin/bash"]
