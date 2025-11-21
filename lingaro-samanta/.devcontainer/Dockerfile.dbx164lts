@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       python3-pip \
       gettext-base \
       mariadb-client \
+      zsh \
     && rm -rf /var/lib/apt/lists/*
 
 # Azul Zulu JDK 17.54+21
@@ -105,6 +106,9 @@ RUN mkdir -p ${SPARK_HOME}/jars \
 RUN curl -fsSL https://downloads.mariadb.com/Connectors/java/connector-java-3.3.2/mariadb-java-client-3.3.2.jar \
       -o ${SPARK_HOME}/jars/mariadb-java-client.jar
 
+# Install Databricks CLI (new Go-based CLI)
+RUN curl -fsSL https://raw.githubusercontent.com/databricks/cli/main/install.sh | bash -s -- v0.278.0
+
 # PySpark + Delta
 # delta-spark 3.2.0, not 3.3.1, due to compatibility issues
 ENV VIRTUAL_ENV=/opt/venv
@@ -125,6 +129,7 @@ RUN java -version \
     && scala -version \
     && python3.12 --version \
     && R --version \
-    && ${SPARK_HOME}/bin/spark-submit --version
+    && ${SPARK_HOME}/bin/spark-submit --version \
+    && databricks --version
 
 CMD ["/bin/bash"]

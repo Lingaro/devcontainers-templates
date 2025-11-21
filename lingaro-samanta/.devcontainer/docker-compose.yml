@@ -123,11 +123,15 @@ services:
       OPENAI_MODEL: ${OPENAI_MODEL}
     working_dir: /samanta
     entrypoint: >
-      bash -lc "
-      until mariadb -h mariadb -u$MYSQL_USER -p\"$MYSQL_PASSWORD\" -e 'SELECT 1' >/dev/null 2>&1;
-      do echo 'Waiting for MariaDB...'; sleep 2; done;
-      exec bash
-      "
+      sh -lc '
+        until mariadb -h mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" -e "SELECT 1" >/dev/null 2>&1;
+        do
+          echo "Waiting for MariaDB...";
+          sleep 2;
+        done;
+
+        exec ${DEFAULT_SHELL}
+      '
 
 volumes:
   mariadb_data:
