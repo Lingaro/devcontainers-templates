@@ -10,7 +10,9 @@
   },
   "workspaceFolder": "/samanta",
   "containerEnv": {
-    "COMPOSE_FILE": "${containerWorkspaceFolder}/.devcontainer/docker-compose.yml"
+    "COMPOSE_FILE": "${containerWorkspaceFolder}/.devcontainer/docker-compose.yml",
+    "SPARK_CONF_DIR": "/samanta/config",
+    "SPARK_CONF_FILE": "/samanta/config/spark-defaults.conf"
   },
   "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-create.sh",
   "updateContentCommand": "",

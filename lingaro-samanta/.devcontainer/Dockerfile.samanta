@@ -1,28 +1,28 @@
 # Dockerfile.samanta
-FROM azul/zulu-openjdk:8
+FROM azul/zulu-openjdk:17
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install the necessary dependencies
 RUN apt-get -q update \
     && apt-get install -yq --no-install-recommends \
-      dialog \
-      apt-utils \
-      ca-certificates \
-      curl \
-      dnsutils \
-      gnupg2 \
-      wget \
-      mysql-client \
-      graphviz \
-      telnet \
-      htop \
-      unzip \
-      apt-transport-https \
-      vim \
-      cifs-utils \
-      sudo \
-      zsh \
+       dialog \
+       apt-utils \
+       ca-certificates \
+       curl \
+       dnsutils \
+       gnupg2 \
+       wget \
+       mysql-client \
+       graphviz \
+       telnet \
+       htop \
+       unzip \
+       apt-transport-https \
+       vim \
+       cifs-utils \
+       sudo \
+       zsh \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -34,6 +34,27 @@ RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee -a /etc
     && apt-get install -y sbt \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Spark (prebuilt for Hadoop 3)
+ARG SPARK_VERSION=3.5.2
+ARG HADOOP_PROFILE=hadoop3
+ENV SPARK_HOME=/opt/spark
+RUN set -eux; \
+    ARCHIVE=spark-${SPARK_VERSION}-bin-${HADOOP_PROFILE}.tgz; \
+    URL=https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${ARCHIVE}; \
+    curl -fsSL -o /tmp/${ARCHIVE} ${URL}; \
+    tar -xzf /tmp/${ARCHIVE} -C /opt; \
+    mv /opt/spark-${SPARK_VERSION}-bin-${HADOOP_PROFILE} ${SPARK_HOME}; \
+    rm -f /tmp/${ARCHIVE};
+
+ENV PATH="${SPARK_HOME}/bin:${SPARK_HOME}/sbin:${PATH}"
+
+# Create a Python venv and install pyspark (optional, helps python tests)
+RUN apt-get update && apt-get install -y python3-venv python3-pip && rm -rf /var/lib/apt/lists/* \
+    && python3 -m venv /opt/venv && /opt/venv/bin/pip install --upgrade pip setuptools wheel \
+    && /opt/venv/bin/pip install --no-cache-dir pyspark==${SPARK_VERSION}
+
+ENV PATH="/opt/venv/bin:${PATH}"
 
 # ARG SONAR_SCANNER_VERSION=5.0.1.3006
 ARG SONAR_SCANNER_VERSION=7.3.0.5189
@@ -79,11 +100,11 @@ RUN npm install -g \
        @qwen-code/qwen-code \
     && npm cache clean --force \
     && echo '#!/bin/bash\n\
-if [ -n "$OPENAI_BASE_URL" ]; then\n\
-  exec qwen --openai-base-url "$OPENAI_BASE_URL" "$@"\n\
-else\n\
- exec qwen "$@"\n\
-fi' > /usr/local/bin/qwen-proxy \
+       if [ -n "$OPENAI_BASE_URL" ]; then\n\
+         exec qwen --openai-base-url "$OPENAI_BASE_URL" "$@"\n\
+       else\n\
+        exec qwen "$@"\n\
+       fi' > /usr/local/bin/qwen-proxy \
     && chmod +x /usr/local/bin/qwen-proxy
 # Claude Code environment variables
 ENV ANTHROPIC_BASE_URL=""
@@ -97,5 +118,6 @@ ENV OPENAI_MODEL=""
 ENV ANTHROPIC_API_KEY=""
 # AI TOOLS INSTALLATION end
 
+RUN chown -R user:user /opt/venv /opt/spark
 USER user
 ENV HOME=/home/user

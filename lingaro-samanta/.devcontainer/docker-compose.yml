@@ -20,7 +20,14 @@ services:
       retries: 10
     volumes:
       - mariadb_data:/var/lib/mysql
-      - ${HOST_ABSOLUTE_PATH}/initdb:/docker-entrypoint-initdb.d:ro
+      # - ${HOST_ABSOLUTE_PATH}/initdb:/docker-entrypoint-initdb.d:ro
+      - type: bind
+        source: ../initdb
+        target: /docker-entrypoint-initdb.d
+      # - type: bind
+      #   source: ${HOST_ABSOLUTE_PATH:-./}/initdb
+      #   target: /docker-entrypoint-initdb.d
+      #   read_only: true
       # Optional: Custom MariaDB configuration (create mariadb.cnf in project root if needed)
       # - ${HOST_ABSOLUTE_PATH}/mariadb.cnf:/etc/mysql/conf.d/zz-custom.cnf:ro
 
@@ -40,9 +47,15 @@ services:
       JAR_NAME: ${JAR_NAME:-PG-Samanta-ETL-assembly-1.0.168.jar}
 
       AZ_ACCOUNT_KEY: ${AZ_ACCOUNT_KEY}
-      DB_URL: jdbc:mariadb://mariadb:3306/${MYSQL_DATABASE}?user=${MYSQL_USER}\&password=${MYSQL_PASSWORD}
+      # JDBC connection - use separate user/password instead of URL parameters to avoid escaping issues
+      DB_URL: jdbc:mariadb://mariadb:3306/${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
-      - ${HOST_ABSOLUTE_PATH}:/samanta # opt/app
+      # - ${HOST_ABSOLUTE_PATH}:/samanta # opt/app
+      - type: bind
+        source: ../
+        target: /samanta
       - /tmp/samanta:/tmp/samanta
       # - ./spark-conf:/opt/app/spark-conf:ro
     command: ["bash", "-lc", "sleep infinity"]

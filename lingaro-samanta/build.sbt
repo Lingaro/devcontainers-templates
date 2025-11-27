@@ -5,7 +5,7 @@ import sbt.Keys._
 name := "PG-Samanta-ETL"
 
 // after update, please rebuild with sbt
-version := "1.0.168"
+version := "1.0.172"
 
 scalaVersion := "2.12.20"
 val sparkVersion = "3.5.2"
@@ -18,8 +18,7 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.17" % Test, // Unit tests
   "org.apache.spark" %% "spark-core" % sparkVersion % "provided", // Spark
   "org.apache.spark" %% "spark-sql" % sparkVersion % "provided", // Spark SQL
-  // "com.mysql" % "mysql-connector-j" % "8.1.0", // MySQL JDBC
-  "org.mariadb.jdbc" % "mariadb-java-client" % "3.3.2" % "provided", // MariaDB JDBC
+  "com.mysql" % "mysql-connector-j" % "8.1.0", // MySQL JDBC
   "com.lihaoyi" %% "upickle" % "3.1.3", // JSON support
   "com.github.servicenow.stl4j" % "stl-decomp-4j" % "1.0.5", // Forecast
   "com.lihaoyi" %% "fastparse" % "3.0.2", // Parser building tool
