@@ -97,10 +97,12 @@ RUN mkdir -p ${SPARK_HOME}/jars \
 
 # Delta Lake 3.3.1
 RUN mkdir -p ${SPARK_HOME}/jars \
-    && curl -L https://repo1.maven.org/maven2/io/delta/delta-core_2.12/3.3.1/delta-core_2.12-3.3.1.jar \
-      -o ${SPARK_HOME}/jars/delta-core_2.12-3.3.1.jar \
+    && curl -L https://repo1.maven.org/maven2/io/delta/delta-spark_2.12/3.3.1/delta-spark_2.12-3.3.1.jar \
+       -o ${SPARK_HOME}/jars/delta-spark_2.12-3.3.1.jar \
     && curl -L https://repo1.maven.org/maven2/io/delta/delta-storage/3.3.1/delta-storage-3.3.1.jar \
-      -o ${SPARK_HOME}/jars/delta-storage-3.3.1.jar
+       -o ${SPARK_HOME}/jars/delta-storage-3.3.1.jar \
+    && echo "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension" >> ${SPARK_HOME}/conf/spark-defaults.conf \
+    && echo "spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog" >> ${SPARK_HOME}/conf/spark-defaults.conf
 
 # MariaDB JDBC
 ARG MARIADB_JDBC_VER=3.3.2
