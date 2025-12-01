@@ -1,0 +1,123 @@
+# Dockerfile.samanta
+FROM azul/zulu-openjdk:8
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install the necessary dependencies
+RUN apt-get -q update \
+    && apt-get install -yq --no-install-recommends \
+       dialog \
+       apt-utils \
+       ca-certificates \
+       curl \
+       dnsutils \
+       gnupg2 \
+       wget \
+       mysql-client \
+       graphviz \
+       telnet \
+       htop \
+       unzip \
+       apt-transport-https \
+       vim \
+       cifs-utils \
+       sudo \
+       zsh \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install sbt
+RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee -a /etc/apt/sources.list.d/sbt.list  \
+    && echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | tee /etc/apt/sources.list.d/sbt_old.list  \
+    && curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | apt-key add \
+    && apt-get update \
+    && apt-get install -y sbt \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Spark (prebuilt for Hadoop 3)
+ARG SPARK_VERSION=3.5.2
+ARG HADOOP_PROFILE=hadoop3
+ENV SPARK_HOME=/opt/spark
+RUN set -eux; \
+    ARCHIVE=spark-${SPARK_VERSION}-bin-${HADOOP_PROFILE}.tgz; \
+    URL=https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${ARCHIVE}; \
+    curl -fsSL -o /tmp/${ARCHIVE} ${URL}; \
+    tar -xzf /tmp/${ARCHIVE} -C /opt; \
+    mv /opt/spark-${SPARK_VERSION}-bin-${HADOOP_PROFILE} ${SPARK_HOME}; \
+    rm -f /tmp/${ARCHIVE};
+
+ENV PATH="${SPARK_HOME}/bin:${SPARK_HOME}/sbin:${PATH}"
+
+# Create a Python venv and install pyspark (optional, helps python tests)
+RUN apt-get update && apt-get install -y python3-venv python3-pip && rm -rf /var/lib/apt/lists/* \
+    && python3 -m venv /opt/venv && /opt/venv/bin/pip install --upgrade pip setuptools wheel \
+    && /opt/venv/bin/pip install --no-cache-dir pyspark==${SPARK_VERSION}
+
+ENV PATH="/opt/venv/bin:${PATH}"
+
+# ARG SONAR_SCANNER_VERSION=5.0.1.3006
+ARG SONAR_SCANNER_VERSION=7.3.0.5189
+ARG SONAR_SCANNER_HOME=/opt/sonar-scanner
+ARG TARGETARCH
+
+# Get sonar-scanner
+RUN set -eux; \
+    case "$TARGETARCH" in \
+      amd64)  SONAR_ARCH="linux-x64";; \
+      arm64)  SONAR_ARCH="linux-aarch64";; \
+      *) echo "Unsupported TARGETARCH: $TARGETARCH"; exit 1;; \
+    esac; \
+    SONAR_URL="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-${SONAR_ARCH}.zip"; \
+    curl -fsSL -o /tmp/sonar-scanner.zip "$SONAR_URL"; \
+    unzip /tmp/sonar-scanner.zip -d /opt; \
+    mv "/opt/sonar-scanner-${SONAR_SCANNER_VERSION}-${SONAR_ARCH}" "${SONAR_SCANNER_HOME}"; \
+    rm -f /tmp/sonar-scanner.zip; \
+    "${SONAR_SCANNER_HOME}/bin/sonar-scanner" --version
+
+ENV PATH="${SONAR_SCANNER_HOME}/bin:${PATH}"
+
+RUN useradd -m -s /bin/bash user \
+    && echo "user ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/010-user-nopasswd \
+    && chmod 0440 /etc/sudoers.d/010-user-nopasswd \
+    && rm -rf /var/cache/apt/*
+# TODO useradd -m -s /bin/bash user
+# useradd user \
+# && mkdir /home/user \
+# && chown user:user /home/user \
+
+RUN mkdir /samanta \
+    && chown user:user /samanta
+
+# AI TOOLS INSTALLATION start
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Install clude-code, qwen-code, and create qwen-proxy script
+RUN npm install -g \
+       @anthropic-ai/claude-code \
+       @qwen-code/qwen-code \
+    && npm cache clean --force \
+    && echo '#!/bin/bash\n\
+       if [ -n "$OPENAI_BASE_URL" ]; then\n\
+         exec qwen --openai-base-url "$OPENAI_BASE_URL" "$@"\n\
+       else\n\
+        exec qwen "$@"\n\
+       fi' > /usr/local/bin/qwen-proxy \
+    && chmod +x /usr/local/bin/qwen-proxy
+# Claude Code environment variables
+ENV ANTHROPIC_BASE_URL=""
+ENV ANTHROPIC_AUTH_TOKEN=""
+ENV ANTHROPIC_MODEL=""
+# Qwen Code environment variables
+ENV OPENAI_BASE_URL=""
+ENV OPENAI_API_KEY=""
+ENV OPENAI_MODEL=""
+# Legacy environment variables (for backward compatibility)
+ENV ANTHROPIC_API_KEY=""
+# AI TOOLS INSTALLATION end
+
+RUN chown -R user:user /opt/venv /opt/spark
+USER user
+ENV HOME=/home/user

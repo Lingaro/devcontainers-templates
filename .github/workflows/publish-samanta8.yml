@@ -1,0 +1,100 @@
+# .github\workflows\publish-samanta8.yml
+name: publish-samanta8
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: publish-lingaro-samanta8
+  cancel-in-progress: false
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify Docker Hub availability
+        id: check-hub
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "🔍 Checking Docker Hub status..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://auth.docker.io/token)
+
+          if [ "$STATUS" != "200" ] && [ "$STATUS" != "401" ]; then
+            echo "❌ Docker Hub seems DOWN (HTTP $STATUS from auth.docker.io/token)"
+            echo "💡 This is likely a Docker Hub outage (503/5xx)."
+            echo "ℹ️  Consider rerunning later or using a fallback base image (ECR Public or GHCR mirror)."
+            exit 1
+          fi
+
+          echo "✅ Docker Hub OK (auth.docker.io returned $STATUS)"
+
+      - name: Get repo owner in lowercase
+        id: owner
+        run: echo "GITHUB_REPOSITORY_OWNER_LOWERCASE=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute next numeric tag
+        id: nexttag
+        env:
+          OWNER: ${{ github.repository_owner }}
+          PKG: lingaro-samanta8
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          fetch() {
+            gh api --paginate -H "Accept: application/vnd.github+json" "$1" -q '.[]?.metadata.container.tags[]?' || true
+          }
+
+          TAGS=$(fetch "orgs/${OWNER}/packages/container/${PKG}/versions?per_page=100")
+          if [ -z "$TAGS" ]; then
+            TAGS=$(fetch "users/${OWNER}/packages/container/${PKG}/versions?per_page=100")
+          fi
+
+          NUMS=$(printf "%s\n" $TAGS | grep -E '^[0-9]+$' || true)
+
+          if [ -z "$NUMS" ]; then
+            NEXT=1
+          else
+            MAX=$(printf "%s\n" $NUMS | sort -n | tail -1)
+            NEXT=$((MAX + 1))
+          fi
+
+          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
+          echo "NEXT tag: $NEXT"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build & push
+        uses: docker/build-push-action@v6
+        with:
+          context: lingaro-samanta/.devcontainer/
+          file: lingaro-samanta/.devcontainer/Dockerfile.samanta8
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ghcr.io/${{ steps.owner.outputs.GITHUB_REPOSITORY_OWNER_LOWERCASE }}/lingaro-samanta8:${{ steps.nexttag.outputs.next }}
+            ghcr.io/${{ steps.owner.outputs.GITHUB_REPOSITORY_OWNER_LOWERCASE }}/lingaro-samanta8:latest
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.title=lingaro-samanta8
+            org.opencontainers.image.version=${{ steps.nexttag.outputs.next }}
+          cache-from: type=gha,scope=lingaro-samanta8
+          cache-to: type=gha,mode=max,scope=lingaro-samanta8,compression=zstd,compression-level=6
