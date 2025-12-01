@@ -70,4 +70,7 @@ if grep -q '^HOST_ABSOLUTE_PATH=' .devcontainer/.env.example 2>/dev/null; then
 fi
 
 echo "✅ Imported: $REMOTE/$BRANCH:$TEMPLATE → $DEST"
-printf "❗ Please:\n\t1. Copy .devcontainer/.env.example to .devcontainer/.env.\n\t2. Set the variables as needed.\n\t3. Reopen the folder in the container (F1 → Dev Containers: Reopen in Container)"
+printf "❗ Please:"
+printf "\t1. Copy .devcontainer/.env.example to .devcontainer/.env."
+printf "\t2. Set the variables as needed."
+printf "\t3. Reopen the folder in the container (F1 → Dev Containers: Reopen in Container)"
