@@ -14,8 +14,30 @@ lazy val idePackagePrefix = settingKey[Option[String]]("Package prefix for IDE")
 idePackagePrefix := Some("com.pg.samanta")
 Global / excludeLintKeys += idePackagePrefix
 
+Test / fork := true
+Test / parallelExecution := false
+Test / javaOptions ++= Seq(
+  "-Xmx12g",
+  "-Xms4g",
+  "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+  "--add-opens=java.base/sun.util.calendar=ALL-UNNAMED",
+  "--add-opens=java.base/java.nio=ALL-UNNAMED",
+  "--add-opens=java.base/java.io=ALL-UNNAMED",
+  "--add-opens=java.base/java.lang=ALL-UNNAMED",
+  "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
+  "--add-opens=java.base/java.util=ALL-UNNAMED"
+)
+// Removing sbt default memory settings to let above options take effect
+Test / javaOptions ~= { opts =>
+  opts.filterNot { opt =>
+    opt.startsWith("-Xmx") || 
+    opt.startsWith("-XX:MaxMetaspaceSize") || 
+    opt.startsWith("-XX:ReservedCodeCacheSize")
+  }
+}
+
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.2.17" % Test, // Unit tests
+  "org.scalatest" %% "scalatest" % "3.2.18" % Test, // Unit tests
   "org.apache.spark" %% "spark-core" % sparkVersion % "provided", // Spark
   "org.apache.spark" %% "spark-sql" % sparkVersion % "provided", // Spark SQL
   "com.mysql" % "mysql-connector-j" % "8.1.0", // MySQL JDBC
@@ -63,3 +85,5 @@ ThisBuild / assemblyMergeStrategy := {
   case PathList("META-INF", _*) => MergeStrategy.discard
   case _                        => MergeStrategy.first
 }
+
+Test / compile := (Test / compile).dependsOn(Compile / compile).value
