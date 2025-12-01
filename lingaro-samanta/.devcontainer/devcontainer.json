@@ -6,6 +6,7 @@
   "remoteUser": "user",
   "shutdownAction": "stopCompose",
   "features": {
+    // Note: IntelliJ ignores this; Docker socket mounted in docker-compose.yml instead
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
   },
   "workspaceFolder": "/samanta",
@@ -38,6 +39,18 @@
         "saoudrizwan.claude-dev",
         "github.copilot",
         "github.copilot-chat"
+      ]
+    },
+    "jetbrains": {
+      "backend": "IntelliJ",
+      "plugins": [
+        "Docker",
+        "org.intellij.scala",
+        "com.intellij.database",
+        "com.github.sbt.sbt-idea-plugin",
+        "org.jetbrains.plugins.hocon",
+        "com.jetbrains.plugins.webstorm.copilot",
+        "com.github.copilot"
       ]
     }
   }
