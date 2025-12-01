@@ -122,8 +122,8 @@ services:
       SAMANTA_COMPRESS: 0
       SAMANTA_CHECKPOINT: 0
       SAMANTA_PLATFORM: "DBR"
-      SAMANTA_CONF: "/dbfs/mnt/home/config"
-      SAMANTA_HOME: "/dbfs/mnt/home/samanta_home"
+      SAMANTA_CONF: "/samanta/config"
+      SAMANTA_HOME: "/samanta_home"
       SAMANTA_COMPRESS_ADT: 0
       SAMANTA_INCREMENTS_DISABLED: 1
       # Anthropic and OpenAI
