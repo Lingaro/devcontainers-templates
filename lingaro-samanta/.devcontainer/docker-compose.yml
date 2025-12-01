@@ -47,7 +47,8 @@ services:
       JAR_NAME: ${JAR_NAME:-PG-Samanta-ETL-assembly-1.0.168.jar}
       AZ_ACCOUNT_KEY: ${AZ_ACCOUNT_KEY}
       # JDBC connection - use separate user/password instead of URL parameters to avoid escaping issues
-      DB_URL: jdbc:mariadb://mariadb:3306/${MYSQL_DATABASE}
+      DB_URL: "jdbc:mariadb://mariadb:3306/${MYSQL_DATABASE}?user=${MYSQL_USER}&password=${MYSQL_PASSWORD}"
+      DB_NAME: ${MYSQL_DATABASE}
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
@@ -112,7 +113,7 @@ services:
       SONAR_ORGANIZATION: ${SONAR_ORGANIZATION}
       SONAR_PROJECT: ${SONAR_PROJECT}
       # MariaDB
-      DB_URL: jdbc:mariadb://mariadb:3306/${MYSQL_DATABASE}
+      DB_URL: "jdbc:mariadb://mariadb:3306/${MYSQL_DATABASE}?user=${MYSQL_USER}&password=${MYSQL_PASSWORD}"
       DB_NAME: ${MYSQL_DATABASE}
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
